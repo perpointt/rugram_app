@@ -1,0 +1,9 @@
+{
+  "id": 5,
+  "name": "",
+  "email": "gang@list.ru",
+  "username": "test40",
+  "picture": "http://127.0.0.1:8000/media/default.png",
+  "private": false,
+  "bio": null
+}
