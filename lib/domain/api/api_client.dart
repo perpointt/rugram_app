@@ -64,8 +64,49 @@ class ApiClientImpl implements ApiClient {
     }
   }
 
-  AppException _capture(DioException exception) {
-    throw AppException(exception);
+  ApiException _capture(DioException exception) {
+    final response = exception.response;
+    if (response == null) {
+      switch (exception.type) {
+        case DioExceptionType.connectionError:
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.receiveTimeout:
+        case DioExceptionType.sendTimeout:
+          return ApiException(
+            error: exception.message,
+            stackTrace: exception.stackTrace,
+            type: ApiExceptionType.timeout,
+          );
+        default:
+          return ApiException(
+            error: exception.message,
+            stackTrace: exception.stackTrace,
+            statusCode: 403,
+            type: ApiExceptionType.other,
+          );
+      }
+    } else if (response.statusCode == 401) {
+      return ApiException(
+        error: response.data,
+        stackTrace: exception.stackTrace,
+        statusCode: response.statusCode,
+        type: ApiExceptionType.auth,
+      );
+    } else if (response.statusCode == 404) {
+      return ApiException(
+        error: response.data,
+        stackTrace: exception.stackTrace,
+        statusCode: response.statusCode,
+        type: ApiExceptionType.badRequest,
+      );
+    } else {
+      return ApiException(
+        error: response.data,
+        stackTrace: exception.stackTrace,
+        statusCode: response.statusCode,
+        type: ApiExceptionType.other,
+      );
+    }
   }
 
   @override
