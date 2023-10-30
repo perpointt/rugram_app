@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/themes/themes.dart';
 
@@ -9,27 +8,23 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, __) => MaterialApp.router(
-        routerConfig: AppNavigator.instance.config(
-          navigatorObservers: () => [NavObserver()],
-        ),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('ru', 'RU')],
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        builder: (context, child) {
-          return _AppObserver(
-            child: child ?? const SizedBox.shrink(),
-          );
-        },
+    return MaterialApp.router(
+      routerConfig: AppNavigator.instance.config(
+        navigatorObservers: () => [NavObserver()],
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('ru', 'RU')],
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      builder: (context, child) {
+        return _AppObserver(
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

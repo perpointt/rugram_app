@@ -23,6 +23,8 @@ dependencies:
   bugsnag_flutter: ^3.0.0
   intl: ^0.18.1
   shared_preferences: ^2.2.2
+  flutter_advanced_drawer: ^1.3.5
+  dartx: ^1.2.0
 
 dev_dependencies:
   flutter_test:

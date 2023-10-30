@@ -27,6 +27,31 @@ class _Router extends _$_Router {
       path: AppRouteNames.app,
       page: AppRoute.page,
       initial: true,
+      children: [
+        AutoRoute(
+          path: '',
+          page: HomeRoute.page,
+          initial: true,
+          maintainState: false,
+          children: [
+            AutoRoute(
+              path: AppRouteNames.welcome,
+              page: WelcomeRoute.page,
+              initial: true,
+            ),
+            AutoRoute(
+              path: AppRouteNames.profile,
+              page: ProfileRoute.page,
+            ),
+          ],
+        ),
+      ],
+    ),
+    RedirectRoute(
+      path: AppRouteNames.app,
+      redirectTo: AppRouteNames.join(
+        [AppRouteNames.app, AppRouteNames.welcome],
+      ),
     ),
     RedirectRoute(path: '*', redirectTo: AppRouteNames.notFound),
   ];
