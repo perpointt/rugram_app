@@ -66,4 +66,20 @@ class ApiClientImpl implements ApiClient {
   AppException _capture(DioException exception) {
     throw AppException(exception);
   }
+
+  @override
+  Future<Map<String, dynamic>> createPost(
+      Map<String, dynamic> queryParameters) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, dynamic>> login(Map<String, dynamic> queryParameters) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, dynamic>> register(Map<String, dynamic> queryParameters) {
+    throw UnimplementedError();
+  }
 }

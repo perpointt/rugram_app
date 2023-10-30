@@ -1,10 +1,13 @@
 import 'package:rugram/data/data_providers/version_data_provider.dart';
 import 'package:rugram/data/servies/app_service.dart';
+import 'package:rugram/domain/data_providers/version_data_provider.dart';
 
 class AppServiceImpl implements AppService {
-  AppServiceImpl(this.versionDataProvider);
+  late final VersionDataProvider versionDataProvider;
 
-  final VersionDataProvider versionDataProvider;
+  AppServiceImpl({VersionDataProvider? versionDataProvider}) {
+    this.versionDataProvider = versionDataProvider ?? VersionDataProviderImpl();
+  }
 
   @override
   Future<String> fetchVersion() async {

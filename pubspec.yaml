@@ -26,11 +26,17 @@ dependencies:
   dartx: ^1.2.0
   permission_handler: ^11.0.1
   dio: ^5.3.3
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  json_serializable: ^6.7.1
+  json_annotation: ^4.8.1
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  isar_generator: ^3.1.0+1
   flutter_lints: ^2.0.0
   auto_route_generator: ^7.3.1
   build_runner: ^2.3.3
@@ -47,3 +53,4 @@ flutter:
   assets:
     - assets/resources/
     - assets/images/
+    - assets/mocks/
