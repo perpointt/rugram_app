@@ -21,6 +21,12 @@ abstract class _$_Router extends RootStackRouter {
         child: const AppScreenFactory(),
       );
     },
+    CameraRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CameraScreenFactory(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -31,6 +37,12 @@ abstract class _$_Router extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileScreenFactory(),
+      );
+    },
+    SelectPhotoRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SelectPhotoScreenFactory(),
       );
     },
     WelcomeRoute.name: (routeData) {
@@ -52,6 +64,20 @@ class AppRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AppRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CameraScreenFactory]
+class CameraRoute extends PageRouteInfo<void> {
+  const CameraRoute({List<PageRouteInfo>? children})
+      : super(
+          CameraRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CameraRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -80,6 +106,20 @@ class ProfileRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SelectPhotoScreenFactory]
+class SelectPhotoRoute extends PageRouteInfo<void> {
+  const SelectPhotoRoute({List<PageRouteInfo>? children})
+      : super(
+          SelectPhotoRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SelectPhotoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

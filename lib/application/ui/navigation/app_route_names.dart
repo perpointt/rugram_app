@@ -8,6 +8,7 @@ abstract class AppRouteNames {
   static const profile = 'profile';
   static const welcome = 'welcome';
   static const camera = 'camera';
+  static const select = 'select';
 
   static String join(List<String> paths) {
     return paths.join('/');

@@ -5,6 +5,7 @@ import 'package:rugram/application/ui/screens/camera_widget/camera_screen.dart';
 import 'package:rugram/application/ui/screens/home_widget/home_screen.dart';
 import 'package:rugram/application/ui/screens/home_widget/home_view_model.dart';
 import 'package:rugram/application/ui/screens/profile_widget/profile_screen.dart';
+import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_screen.dart';
 import 'package:rugram/application/ui/screens/welcome_widget/welcome_screen.dart';
 
 @RoutePage()
@@ -47,5 +48,25 @@ class ProfileScreenFactory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ProfileScreen();
+  }
+}
+
+@RoutePage()
+class CameraScreenFactory extends StatelessWidget {
+  const CameraScreenFactory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CameraScreen();
+  }
+}
+
+@RoutePage()
+class SelectPhotoScreenFactory extends StatelessWidget {
+  const SelectPhotoScreenFactory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SelectPhotoScreen();
   }
 }

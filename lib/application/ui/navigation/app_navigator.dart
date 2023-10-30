@@ -19,7 +19,7 @@ class _Router extends _$_Router {
   _Router() : super();
 
   @override
-  RouteType get defaultRouteType => const RouteType.material();
+  RouteType get defaultRouteType => const RouteType.adaptive();
 
   @override
   final List<AutoRoute> routes = [
@@ -32,18 +32,27 @@ class _Router extends _$_Router {
           path: '',
           page: HomeRoute.page,
           initial: true,
-          maintainState: false,
           children: [
             AutoRoute(
               path: AppRouteNames.welcome,
               page: WelcomeRoute.page,
               initial: true,
+              maintainState: false,
             ),
             AutoRoute(
               path: AppRouteNames.profile,
               page: ProfileRoute.page,
+              maintainState: false,
             ),
           ],
+        ),
+        AutoRoute(
+          path: AppRouteNames.camera,
+          page: CameraRoute.page,
+        ),
+        AutoRoute(
+          path: AppRouteNames.select,
+          page: SelectPhotoRoute.page,
         ),
       ],
     ),
