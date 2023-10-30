@@ -53,8 +53,12 @@ class _Router extends _$_Router {
           page: CameraRoute.page,
         ),
         AutoRoute(
-          path: AppRouteNames.select,
+          path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.select]),
           page: SelectPhotoRoute.page,
+        ),
+        AutoRoute(
+          path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.create]),
+          page: CreatePostRoute.page,
         ),
       ],
     ),

@@ -9,6 +9,8 @@ abstract class AppRouteNames {
   static const welcome = 'welcome';
   static const camera = 'camera';
   static const select = 'select';
+  static const post = 'post';
+  static const create = 'create';
 
   static const login = 'login';
   static const register = 'register';
