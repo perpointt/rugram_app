@@ -4,6 +4,7 @@ export 'package:oktoast/oktoast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:rugram/application/ui/navigation/guards/guards.dart';
 import 'package:rugram/application/ui/navigation/screen_factories/screen_factory.dart';
 import 'package:rugram/application/ui/widgets/loader.dart';
 import 'package:oktoast/oktoast.dart' as oktoast;
@@ -27,6 +28,7 @@ class _Router extends _$_Router {
       path: AppRouteNames.app,
       page: AppRoute.page,
       initial: true,
+      guards: [AppGuard()],
       children: [
         AutoRoute(
           path: '',
@@ -53,6 +55,22 @@ class _Router extends _$_Router {
         AutoRoute(
           path: AppRouteNames.select,
           page: SelectPhotoRoute.page,
+        ),
+      ],
+    ),
+    AutoRoute(
+      path: AppRouteNames.auth,
+      page: AuthRoute.page,
+      guards: [AuthGuard()],
+      children: [
+        AutoRoute(
+          path: AppRouteNames.login,
+          page: LoginRoute.page,
+          initial: true,
+        ),
+        AutoRoute(
+          path: AppRouteNames.register,
+          page: RegisterRoute.page,
         ),
       ],
     ),

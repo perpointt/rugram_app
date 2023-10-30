@@ -1,5 +1,3 @@
-abstract class DatabaseClient<T> {
-  T get instance;
-
-  Future<T> open(String path);
+abstract class DatabaseClient {
+  Future<void> open(String path);
 }

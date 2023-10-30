@@ -10,6 +10,9 @@ abstract class AppRouteNames {
   static const camera = 'camera';
   static const select = 'select';
 
+  static const login = 'login';
+  static const register = 'register';
+
   static String join(List<String> paths) {
     return paths.join('/');
   }
