@@ -1,0 +1,46 @@
+name: rugram
+description: A new Flutter project.
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  provider: ^6.0.2
+  cupertino_icons: ^1.0.2
+  flutter_screenutil: ^5.3.1
+  device_info_plus: ^9.0.3
+  package_info_plus: ^4.1.0
+  auto_route: ^7.8.4
+  oktoast: ^3.3.1
+  bugsnag_flutter: ^3.0.0
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  auto_route_generator: ^7.3.1
+  build_runner: ^2.3.3
+  flutter_native_splash: ^2.3.3
+
+flutter:
+  uses-material-design: true
+
+#  fonts:
+#    - family: AppIcons
+#      fonts:
+#        - asset: assets/fonts/AppIcons/AppIcons.ttf
+
+  assets:
+    - assets/resources/
+    - assets/images/
