@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:rugram/data/api/api_client.dart';
+import 'package:rugram/domain/api/api_methods.dart';
 import 'package:rugram/domain/models/app_exception.dart';
 
 class ApiClientImpl implements ApiClient {
@@ -69,17 +70,37 @@ class ApiClientImpl implements ApiClient {
 
   @override
   Future<Map<String, dynamic>> createPost(
-      Map<String, dynamic> queryParameters) {
-    throw UnimplementedError();
+    Map<String, dynamic> queryParameters,
+  ) async {
+    try {
+      final response = await _client.get(ApiMethods.create);
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
   }
 
   @override
-  Future<Map<String, dynamic>> login(Map<String, dynamic> queryParameters) {
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> login(
+    Map<String, dynamic> queryParameters,
+  ) async {
+    try {
+      final response = await _client.get(ApiMethods.token);
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
   }
 
   @override
-  Future<Map<String, dynamic>> register(Map<String, dynamic> queryParameters) {
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> register(
+    Map<String, dynamic> queryParameters,
+  ) async {
+    try {
+      final response = await _client.get(ApiMethods.register);
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
   }
 }

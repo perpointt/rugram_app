@@ -11,4 +11,18 @@ class UserDataProviderImpl implements UserDataProvider {
     final collection = await _client.instance.users.where().findAll();
     return collection.firstOrNull;
   }
+
+  @override
+  Future<void> addUser(User user) async {
+    await _client.instance.writeTxn(() async {
+      await _client.instance.users.put(user);
+    });
+  }
+
+  @override
+  Future<void> clear() async {
+    await _client.instance.writeTxn(() async {
+      await _client.instance.users.clear();
+    });
+  }
 }

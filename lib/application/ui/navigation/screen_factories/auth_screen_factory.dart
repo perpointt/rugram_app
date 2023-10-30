@@ -1,7 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/login_widget/login_screen.dart';
+import 'package:rugram/application/ui/screens/login_widget/login_view_model.dart';
 import 'package:rugram/application/ui/screens/register_widget/register_screen.dart';
+import 'package:rugram/application/ui/screens/register_widget/register_view_model.dart';
 
 @RoutePage()
 class AuthScreenFactory extends StatelessWidget {
@@ -9,7 +12,10 @@ class AuthScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AutoRouter();
+    return GestureDetector(
+      onTap: () => AppNavigator.unfocus(context),
+      child: const AutoRouter(),
+    );
   }
 }
 
@@ -19,7 +25,10 @@ class LoginScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const LoginScreen();
+    return Provider(
+      create: (_) => LoginViewModel(),
+      child: const LoginScreen(),
+    );
   }
 }
 
@@ -29,6 +38,9 @@ class RegisterScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RegisterScreen();
+    return Provider(
+      create: (_) => RegisterViewModel(),
+      child: const RegisterScreen(),
+    );
   }
 }

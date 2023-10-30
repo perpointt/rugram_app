@@ -14,4 +14,9 @@ class Token {
   Token({this.value = ''});
 
   factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
+
+  @override
+  String toString() {
+    return 'Token{id: $id, value: $value}';
+  }
 }
