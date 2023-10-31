@@ -34,6 +34,8 @@ dependencies:
   photo_manager: ^2.7.2
   camera: ^0.10.5+5
   cropperx: ^1.1.1
+  collection: ^1.17.2
+  sliding_up_panel2: ^3.3.0+1
 
 dev_dependencies:
   flutter_test:

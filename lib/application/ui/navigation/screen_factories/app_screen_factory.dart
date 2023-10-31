@@ -8,6 +8,7 @@ import 'package:rugram/application/ui/screens/home_widget/home_view_model.dart';
 import 'package:rugram/application/ui/screens/profile_widget/profile_screen.dart';
 import 'package:rugram/application/ui/screens/profile_widget/profile_view_model.dart';
 import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_screen.dart';
+import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_view_model.dart';
 import 'package:rugram/application/ui/screens/welcome_widget/welcome_screen.dart';
 
 @RoutePage()
@@ -72,7 +73,10 @@ class SelectPhotoScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SelectPhotoScreen();
+    return ChangeNotifierProvider(
+      create: (_) => SelectPhotoViewModel(context),
+      child: const SelectPhotoScreen(),
+    );
   }
 }
 
