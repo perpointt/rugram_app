@@ -10,35 +10,43 @@ class SelectPhotoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.read<SelectPhotoViewModel>();
+    final isPermissionGranted =
+        context.select<SelectPhotoViewModel, bool>((value) {
+      return value.isPermissionGranted;
+    });
     return Scaffold(
-      body: Stack(
-        children: [
-          SlidingUpPanel(
-            minHeight: viewModel.minHeight,
-            maxHeight: viewModel.maxHeight,
-            controller: viewModel.controller,
-            backdropEnabled: false,
-            defaultPanelState: PanelState.OPEN,
-            panelBuilder: () => const _EditorWidget(),
-            slideDirection: SlideDirection.DOWN,
-            onPanelSlide: viewModel.onPanelSlide,
-            body: const _BodyWidget(),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              children: [
-                AppBar(
-                  title: Text(
-                    AppNavigator.uri.toString(),
-                  ),
+      body: isPermissionGranted
+          ? const _BodyWidget()
+          : const _NoPermissionWidget(),
+    );
+  }
+}
+
+class _NoPermissionWidget extends StatelessWidget {
+  const _NoPermissionWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              AppBar(
+                title: Text(
+                  AppNavigator.uri.toString(),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        const Spacer(),
+        const Center(
+          child: Text('Предоставьте доступ к камере'),
+        ),
+        const Spacer(),
+      ],
     );
   }
 }
@@ -48,6 +56,48 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<SelectPhotoViewModel>();
+
+    return Stack(
+      children: [
+        SlidingUpPanel(
+          minHeight: viewModel.minHeight,
+          maxHeight: viewModel.maxHeight,
+          controller: viewModel.controller,
+          backdropEnabled: false,
+          defaultPanelState: PanelState.OPEN,
+          panelBuilder: () => const _EditorWidget(),
+          slideDirection: SlideDirection.DOWN,
+          onPanelSlide: viewModel.onPanelSlide,
+          body: const _GridWidget(),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              AppBar(
+                title: Text(
+                  AppNavigator.uri.toString(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GridWidget extends StatelessWidget {
+  const _GridWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final photos =
+        context.select<SelectPhotoViewModel, List<GalleryPhoto>>((value) {
+      return value.photos;
+    });
+
     return Column(
       children: [
         const _BackdropWidget(),
@@ -58,14 +108,19 @@ class _BodyWidget extends StatelessWidget {
               crossAxisSpacing: 4,
               mainAxisSpacing: 4,
             ),
-            itemCount: 101,
+            itemCount: photos.length,
             padding: const EdgeInsets.all(4),
             itemBuilder: (context, index) {
-              return Card(
-                margin: EdgeInsets.zero,
-                color: Colors.blue,
-                child: Center(
-                  child: Text('$index'),
+              final photo = photos[index];
+              final file = photo.file;
+              if (file == null) return const SizedBox.shrink();
+              return InkWell(
+                onTap: () {
+                  context.read<SelectPhotoViewModel>().addSelectedPhoto(photo);
+                },
+                child: Image.file(
+                  file,
+                  fit: BoxFit.cover,
                 ),
               );
             },
@@ -96,6 +151,10 @@ class _EditorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final select = context.select<SelectPhotoViewModel, EditorSelect>((value) {
+      return value.editorSelect;
+    });
+
     return Column(
       children: [
         SafeArea(
@@ -104,9 +163,14 @@ class _EditorWidget extends StatelessWidget {
           child: AppBar(),
         ),
         IgnoreDraggableWidget(
-          child: const AspectRatio(
+          child: AspectRatio(
             aspectRatio: 1,
-            child: _CropWidget(),
+            child: IndexedStack(
+              index: select.stackIndex,
+              children: select.selectedPhotos.map((photo) {
+                return _CropWidget(photo: photo);
+              }).toList(),
+            ),
           ),
         ),
         Container(
@@ -119,18 +183,32 @@ class _EditorWidget extends StatelessWidget {
   }
 }
 
-class _CropWidget extends StatelessWidget {
-  const _CropWidget();
+class _CropWidget extends StatefulWidget {
+  final GalleryPhoto? photo;
+  const _CropWidget({required this.photo});
+
+  @override
+  State<_CropWidget> createState() => _CropWidgetState();
+}
+
+class _CropWidgetState extends State<_CropWidget>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    final photo = widget.photo;
+
+    if (photo == null) return const SizedBox.shrink();
+    final file = photo.file;
+    if (file == null) return const SizedBox.shrink();
     return Cropper(
       overlayType: OverlayType.grid,
       overlayColor: Colors.white,
-      cropperKey: GlobalKey(debugLabel: 'cropperKey'),
-      image: Image.network(
-        'https://i.pinimg.com/originals/6b/4d/18/6b4d18c0b756ab20c3591490dfc10090.jpg',
-      ),
+      cropperKey: photo.key,
+      image: Image.file(file),
     );
   }
 }
