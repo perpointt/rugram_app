@@ -111,23 +111,122 @@ class _GridWidget extends StatelessWidget {
             itemCount: photos.length,
             padding: const EdgeInsets.all(4),
             itemBuilder: (context, index) {
-              final photo = photos[index];
-              final file = photo.file;
-              if (file == null) return const SizedBox.shrink();
-              return InkWell(
-                onTap: () {
-                  context.read<SelectPhotoViewModel>().addSelectedPhoto(photo);
-                },
-                child: Image.file(
-                  file,
-                  fit: BoxFit.cover,
-                ),
-              );
+              return _ImageWidget(photo: photos[index]);
             },
           ),
         ),
       ],
     );
+  }
+}
+
+class _ImageWidget extends StatelessWidget {
+  final GalleryPhoto photo;
+  const _ImageWidget({required this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    final file = photo.file;
+    if (file == null) return const SizedBox.shrink();
+
+    final viewModel = context.read<SelectPhotoViewModel>();
+
+    return Stack(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: GestureDetector(
+            onTap: () => viewModel.addSelectedPhoto(photo),
+            onLongPress: () => viewModel.setMultiple(photo, true),
+            child: Image.file(
+              file,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        _ActiveImageWidget(photo: photo),
+        _ImageIndexWidget(photo: photo),
+      ],
+    );
+  }
+}
+
+class _ActiveImageWidget extends StatelessWidget {
+  final GalleryPhoto photo;
+  const _ActiveImageWidget({required this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    final _ =
+        context.select<SelectPhotoViewModel, List<GalleryPhoto?>>((value) {
+      return value.photosInEditor;
+    });
+
+    // ignore: non_constant_identifier_names
+    final __ = context.select<SelectPhotoViewModel, int>((value) {
+      return value.stackIndex;
+    });
+
+    final viewModel = context.read<SelectPhotoViewModel>();
+
+    if (viewModel.isPhotoActive(photo)) {
+      return IgnorePointer(
+        child: Container(
+          color: Colors.white.withOpacity(0.5),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+}
+
+class _ImageIndexWidget extends StatelessWidget {
+  final GalleryPhoto photo;
+  const _ImageIndexWidget({required this.photo});
+
+  @override
+  Widget build(BuildContext context) {
+    final multiple = context.select<SelectPhotoViewModel, bool>((value) {
+      return value.multiple;
+    });
+
+    final _ = context.select<SelectPhotoViewModel, int>((value) {
+      return value.stackIndex;
+    });
+
+    // ignore: non_constant_identifier_names
+    final __ =
+        context.select<SelectPhotoViewModel, List<GalleryPhoto?>>((value) {
+      return value.photosInEditor;
+    });
+
+    if (multiple) {
+      final viewModel = context.read<SelectPhotoViewModel>();
+      final index = viewModel.getIndexOfPhotoInEditor(photo);
+      return Align(
+        alignment: Alignment.topRight,
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withOpacity(0.5),
+            border: Border.all(
+              color: index == -1 ? Colors.transparent : Colors.blue,
+              width: index == -1 ? 0 : 2,
+            ),
+          ),
+          width: 24,
+          height: 24,
+          child: Center(
+            child: Text(
+              '${index == -1 ? '' : index}',
+            ),
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
 

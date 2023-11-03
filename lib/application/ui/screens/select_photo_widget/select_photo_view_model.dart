@@ -45,6 +45,10 @@ extension GalleryPhotoExt on List<GalleryPhoto?> {
     return indexWhere((element) => element?.id == id);
   }
 
+  List<GalleryPhoto> get avaliable {
+    return List<GalleryPhoto>.from(where((photo) => photo != null));
+  }
+
   bool get isItemsEmpty {
     return all((photo) => photo == null);
   }
@@ -84,6 +88,11 @@ class GalleryPhoto {
   void setGlobalKey() {
     _key ??= GlobalKey();
   }
+
+  @override
+  String toString() {
+    return 'GalleryPhoto{_entity: $_entity, id: $id, _file: $_file, _key: $_key}';
+  }
 }
 
 class EditorSelect {
@@ -119,14 +128,20 @@ class SelectPhotoViewModel extends ChangeNotifier {
 
   int _page = 0;
 
+  List<GalleryPhoto?> _photosInEditor = <GalleryPhoto?>[];
+  List<GalleryPhoto?> get photosInEditor => _photosInEditor;
+
   List<GalleryPhoto?> _selectedPhotos = <GalleryPhoto?>[];
   List<GalleryPhoto?> get selectedPhotos => _selectedPhotos;
 
   int _stackIndex = 0;
   int get stackIndex => _stackIndex;
 
+  bool _multiple = false;
+  bool get multiple => _multiple;
+
   EditorSelect get editorSelect {
-    return EditorSelect(_stackIndex, _selectedPhotos);
+    return EditorSelect(_stackIndex, _photosInEditor);
   }
 
   Future<void> _init() async {
@@ -147,44 +162,111 @@ class SelectPhotoViewModel extends ChangeNotifier {
 
       final photos = await recents.fetchPhotos(_page);
       _photos = photos;
-      notifyListeners();
+
+      if (_photos.isNotEmpty) {
+        addSelectedPhoto(_photos.first);
+      } else {
+        notifyListeners();
+      }
     }
   }
 
   Future<void> addSelectedPhoto(GalleryPhoto photo) async {
-    final index = _selectedPhotos.getIndex(photo.id);
-
-    if (index == -1) {
+    final selectedIndex = _selectedPhotos.getIndex(photo.id);
+    final editorIndex = _photosInEditor.getIndex(photo.id);
+    if (selectedIndex == -1) {
       await photo.load();
       final file = photo.file;
       if (file == null) return;
 
       photo.setGlobalKey();
-      final items = List<GalleryPhoto?>.from(_selectedPhotos);
-      final firstAvaliableIndex = items.firstAvaliableIndex;
-      if (firstAvaliableIndex == -1) {
-        items.add(photo);
-        _selectedPhotos = items;
-        _setStackIndex(items.indexOf(photo));
-      } else {
-        items[items.firstAvaliableIndex] = photo;
-        _selectedPhotos = items;
-        _setStackIndex(firstAvaliableIndex);
-      }
-    } else if (_stackIndex != index) {
-      _setStackIndex(index);
-    } else {
-      final items = List<GalleryPhoto?>.from(_selectedPhotos);
-      items[index] = null;
 
-      if (items.isItemsEmpty) {
-        _selectedPhotos = [];
-        _setStackIndex(0);
+      final items = List<GalleryPhoto?>.from(_selectedPhotos);
+
+      if (multiple || items.isEmpty) {
+        items.add(photo);
       } else {
-        _selectedPhotos = items;
-        _setStackIndex(_selectedPhotos.lastUnAvaliableIndex);
+        items[0] = photo;
       }
+
+      _selectedPhotos = items;
+      _photosInEditor = items;
+      _setStackIndex(items.indexOf(photo));
+    } else if (_stackIndex != editorIndex) {
+      _setStackIndex(editorIndex);
+    } else if (multiple) {
+      var editorItems = List<GalleryPhoto?>.from(_photosInEditor);
+      var selectedItems = List<GalleryPhoto?>.from(_selectedPhotos);
+
+      editorItems[editorIndex] = null;
+      selectedItems.removeAt(selectedIndex);
+
+      if (editorItems.isItemsEmpty) editorItems = [photo];
+
+      _selectedPhotos = selectedItems;
+      _photosInEditor = editorItems;
+      _setStackIndex(editorItems.lastUnAvaliableIndex);
     }
+
+    // final editorIndex = _photosInEditor.getIndex(photo.id);
+    //
+    // if (editorIndex == -1) {
+    //   await photo.load();
+    //   final file = photo.file;
+    //   if (file == null) return;
+    //
+    //   photo.setGlobalKey();
+    //   final items = List<GalleryPhoto?>.from(_selectedPhotos);
+    //
+    //   if (multiple || items.isEmpty) {
+    //     items.add(photo);
+    //   } else {
+    //     items[0] = photo;
+    //   }
+    //   _selectedPhotos = items;
+    //   _photosInEditor = items;
+    //   _setStackIndex(items.indexOf(photo));
+    // } else if (_stackIndex != editorIndex) {
+    //   _setStackIndex(editorIndex);
+    // } else {
+    //   var editorItems = List<GalleryPhoto?>.from(_photosInEditor);
+    //   var selectedItems = List<GalleryPhoto?>.from(_selectedPhotos);
+    //
+    //   if (_stackIndex == editorIndex && multiple) {
+    //     editorItems[editorIndex] = null;
+    //     var selectedIndex = _selectedPhotos.indexWhere((element) {
+    //       return element?.id == photo.id;
+    //     });
+    //     if (selectedIndex == -1) {
+    //       selectedItems.add(photo);
+    //     } else {
+    //       selectedItems.removeAt(selectedIndex);
+    //     }
+    //   }
+    //
+    //   if (editorItems.isItemsEmpty) editorItems = [photo];
+    //
+    //   _selectedPhotos = selectedItems;
+    //   _photosInEditor = editorItems;
+    //   _setStackIndex(editorItems.lastUnAvaliableIndex);
+    // }
+  }
+
+  void setMultiple(GalleryPhoto photo, bool value) {
+    _multiple = value;
+    addSelectedPhoto(photo);
+    notifyListeners();
+  }
+
+  bool isPhotoActive(GalleryPhoto photo) {
+    if (_photosInEditor.isItemsEmpty) return false;
+    return _photosInEditor[_stackIndex]?.id == photo.id;
+  }
+
+  int getIndexOfPhotoInEditor(GalleryPhoto photo) {
+    return _selectedPhotos.avaliable.indexWhere((element) {
+      return element.id == photo.id;
+    });
   }
 
   void _setStackIndex(int index) {
@@ -203,8 +285,8 @@ class SelectPhotoViewModel extends ChangeNotifier {
   void _setBounds(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
-    final height =
-        size.width + (AppBar().preferredSize.height * 2) + padding.top;
+    final appbarHeight = (AppBar().preferredSize.height * 2);
+    final height = size.width + appbarHeight + padding.top;
     minHeight = height * 0.4;
     maxHeight = height;
     _backdropHeight = (maxHeight - minHeight);
