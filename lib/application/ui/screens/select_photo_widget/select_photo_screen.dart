@@ -1,5 +1,6 @@
 import 'package:cropperx/cropperx.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_view_model.dart';
@@ -93,10 +94,8 @@ class _GridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photos =
-        context.select<SelectPhotoViewModel, List<GalleryPhoto>>((value) {
-      return value.photos;
-    });
+    final viewModel = context.watch<SelectPhotoViewModel>();
+    final photos = viewModel.photos;
 
     return Column(
       children: [
@@ -126,21 +125,20 @@ class _ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = photo.file;
-    if (file == null) return const SizedBox.shrink();
-
     final viewModel = context.read<SelectPhotoViewModel>();
 
     return Stack(
       children: [
         SizedBox(
           width: double.infinity,
+          height: double.infinity,
           child: GestureDetector(
             onTap: () => viewModel.addSelectedPhoto(photo),
             onLongPress: () => viewModel.setMultiple(photo, true),
-            child: Image.file(
-              file,
+            child: AssetEntityImage(
+              photo.entity,
               fit: BoxFit.cover,
+              isOriginal: false,
             ),
           ),
         ),
@@ -255,6 +253,7 @@ class _EditorWidget extends StatelessWidget {
     });
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SafeArea(
           top: true,
@@ -264,11 +263,14 @@ class _EditorWidget extends StatelessWidget {
         IgnoreDraggableWidget(
           child: AspectRatio(
             aspectRatio: 1,
-            child: IndexedStack(
-              index: select.stackIndex,
-              children: select.selectedPhotos.map((photo) {
-                return _CropWidget(photo: photo);
-              }).toList(),
+            child: Center(
+              child: IndexedStack(
+                alignment: Alignment.center,
+                index: select.stackIndex,
+                children: select.selectedPhotos.map((photo) {
+                  return _CropWidget(photo: photo);
+                }).toList(),
+              ),
             ),
           ),
         ),
@@ -276,8 +278,36 @@ class _EditorWidget extends StatelessWidget {
           width: double.infinity,
           height: 56,
           color: Colors.grey,
+          child: const _AspectWidget(),
         ),
       ],
+    );
+  }
+}
+
+class _AspectWidget extends StatelessWidget {
+  const _AspectWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final multiple = context.select<SelectPhotoViewModel, bool>((value) {
+      return value.multiple;
+    });
+
+    return AnimatedOpacity(
+      opacity: multiple ? 0 : 1,
+      duration: const Duration(milliseconds: 200),
+      child: IgnorePointer(
+        ignoring: multiple,
+        child: Center(
+          child: IconButton(
+            onPressed: () {
+              context.read<SelectPhotoViewModel>().setAspectRatio();
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -301,13 +331,11 @@ class _CropWidgetState extends State<_CropWidget>
     final photo = widget.photo;
 
     if (photo == null) return const SizedBox.shrink();
-    final file = photo.file;
-    if (file == null) return const SizedBox.shrink();
+
     return Cropper(
-      overlayType: OverlayType.grid,
-      overlayColor: Colors.white,
       cropperKey: photo.key,
-      image: Image.file(file),
+      image: AssetEntityImage(photo.entity),
+      overlayType: OverlayType.grid,
     );
   }
 }
