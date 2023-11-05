@@ -65,7 +65,14 @@ class GalleryPhoto {
   GlobalKey? _key;
   GlobalKey? get key => _key;
 
+  File? _file;
+  File? get file => _file;
+
   GalleryPhoto(this.entity);
+
+  Future<void> load() async {
+    _file ??= await entity.file;
+  }
 
   void setGlobalKey() {
     _key ??= GlobalKey();
@@ -161,6 +168,8 @@ class SelectPhotoViewModel extends ChangeNotifier {
       photo.setGlobalKey();
 
       final items = List<GalleryPhoto?>.from(_selectedPhotos);
+
+      await photo.load();
 
       if (multiple || items.isEmpty) {
         items.add(photo);

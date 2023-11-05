@@ -58,7 +58,6 @@ class _BodyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.read<SelectPhotoViewModel>();
-
     return Stack(
       children: [
         SlidingUpPanel(
@@ -329,8 +328,13 @@ class _CropWidgetState extends State<_CropWidget>
   Widget build(BuildContext context) {
     super.build(context);
     final photo = widget.photo;
+    final file = photo?.file;
 
-    if (photo == null) return const SizedBox.shrink();
+    if (photo == null || file == null) return const SizedBox.shrink();
+
+    final aspectRatio = context.select<SelectPhotoViewModel, double>((value) {
+      return value.aspectRatio;
+    });
 
     return Cropper(
       cropperKey: photo.key,
