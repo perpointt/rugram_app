@@ -95,13 +95,7 @@ class _AppBarWidget extends StatelessWidget {
               CupertinoButton(
                 onPressed: viewModel.selectedPhotos.isEmpty
                     ? null
-                    : () {
-                        AppNavigator.push(
-                          CreatePostRoute(
-                            images: viewModel.selectedPhotos.toFileList(),
-                          ),
-                        );
-                      },
+                    : () => viewModel.crop(context),
                 child: const Text('Next'),
               ),
             ],

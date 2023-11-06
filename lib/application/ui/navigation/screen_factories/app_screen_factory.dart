@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -85,13 +86,13 @@ class SelectPhotoScreenFactory extends StatelessWidget {
 
 @RoutePage()
 class CreatePostScreenFactory extends StatelessWidget {
-  final List<File> images;
-  const CreatePostScreenFactory({super.key, required this.images});
+  final List<File> files;
+  const CreatePostScreenFactory({super.key, required this.files});
 
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (_) => CreatePostViewModel(images),
+      create: (_) => CreatePostViewModel(files),
       child: const CreatePostScreen(),
     );
   }

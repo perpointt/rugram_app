@@ -39,7 +39,7 @@ abstract class _$_Router extends RootStackRouter {
         routeData: routeData,
         child: CreatePostScreenFactory(
           key: args.key,
-          images: args.images,
+          files: args.files,
         ),
       );
     },
@@ -129,13 +129,13 @@ class CameraRoute extends PageRouteInfo<void> {
 class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
   CreatePostRoute({
     Key? key,
-    required List<File> images,
+    required List<File> files,
     List<PageRouteInfo>? children,
   }) : super(
           CreatePostRoute.name,
           args: CreatePostRouteArgs(
             key: key,
-            images: images,
+            files: files,
           ),
           initialChildren: children,
         );
@@ -149,16 +149,16 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
 class CreatePostRouteArgs {
   const CreatePostRouteArgs({
     this.key,
-    required this.images,
+    required this.files,
   });
 
   final Key? key;
 
-  final List<File> images;
+  final List<File> files;
 
   @override
   String toString() {
-    return 'CreatePostRouteArgs{key: $key, images: $images}';
+    return 'CreatePostRouteArgs{key: $key, files: $files}';
   }
 }
 

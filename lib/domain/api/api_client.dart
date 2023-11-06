@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:rugram/data/api/api_client.dart';
@@ -83,6 +84,16 @@ class ApiClientImpl implements ApiClient {
         newData[key] = files;
       } else if (value is File) {
         final file = await MultipartFile.fromFile(value.path);
+        newData[key] = file;
+      } else if (value is Iterable<Uint8List>) {
+        final files = <MultipartFile>[];
+        await Future.forEach(value, (val) async {
+          final file = MultipartFile.fromBytes(val);
+          files.add(file);
+        });
+        newData[key] = files;
+      } else if (value is Uint8List) {
+        final file = MultipartFile.fromBytes(value);
         newData[key] = file;
       } else {
         newData[key] = value;

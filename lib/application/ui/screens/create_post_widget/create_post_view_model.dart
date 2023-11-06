@@ -1,19 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:rugram/domain/services/file_service.dart';
 import 'package:rugram/domain/services/post_service.dart';
 
 class CreatePostViewModel {
-  CreatePostViewModel(this.images);
+  CreatePostViewModel(this.files);
 
-  final _service = PostServiceImpl();
+  final _postService = PostServiceImpl();
+  final _fileService = FileServiceImpl();
 
-  final List<File> images;
+  final List<File> files;
   final description = TextEditingController();
 
   Future<void> create(BuildContext context) async {
     try {
-      _service.create(_createRequest());
+      await _postService.create(_createRequest());
+      await _fileService.delete(files);
     } catch (error) {
       print(error);
     }
@@ -21,8 +24,8 @@ class CreatePostViewModel {
 
   Map<String, dynamic> _createRequest() {
     return {
-      'images': images,
-      'caption': 'sample caption',
+      'images': files,
+      'caption': description.text,
     };
   }
 }

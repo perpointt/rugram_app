@@ -5,6 +5,7 @@ import 'package:rugram/application/ui/screens/register_widget/register_view_mode
 import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/buttons/buttons.dart';
 import 'package:rugram/application/ui/widgets/divider_widget.dart';
+import 'package:rugram/application/ui/widgets/footer_view.dart';
 import 'package:rugram/application/ui/widgets/input_widget.dart';
 import 'package:rugram/application/ui/widgets/safe_area_bottom_widget.dart';
 
@@ -15,10 +16,21 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<RegisterViewModel>();
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: FooterView(
+        footer: const Column(
+          children: [
+            DividerWidget(
+              margin: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            SizedBox(height: 32),
+            Text(
+              'Rugram from Машинки',
+              style: AppTextStyle.primary400x06,
+            ),
+            SafeAreaBottomWidget(height: 32),
+          ],
+        ),
         children: [
-          const Spacer(),
           const Text(
             'Rugram',
             style: TextStyle(
@@ -69,16 +81,6 @@ class RegisterScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Spacer(),
-          const DividerWidget(
-            margin: EdgeInsets.symmetric(horizontal: 16),
-          ),
-          const SizedBox(height: 32),
-          const Text(
-            'Rugram from Машинки',
-            style: AppTextStyle.primary400x06,
-          ),
-          const SafeAreaBottomWidget(height: 32),
         ],
       ),
     );

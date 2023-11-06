@@ -36,6 +36,7 @@ dependencies:
   cropperx: ^1.1.1
   collection: ^1.17.2
   sliding_up_panel2: ^3.3.0+1
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

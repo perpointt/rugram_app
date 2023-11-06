@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:cropperx/cropperx.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:rugram/application/ui/navigation/app_navigator.dart';
+import 'package:rugram/domain/services/file_service.dart';
 import 'package:rugram/domain/services/photos_permission_service.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
@@ -98,6 +102,9 @@ class SelectPhotoViewModel extends ChangeNotifier {
     _setBounds(context);
     _init();
   }
+  final _photosPermissionService = PhotosPermissionService();
+  final _fileService = FileServiceImpl();
+
   late final double minHeight;
   late final double maxHeight;
 
@@ -105,8 +112,6 @@ class SelectPhotoViewModel extends ChangeNotifier {
   double get backdropHeight => _backdropHeight;
 
   final controller = PanelController();
-
-  final _photosPermissionService = PhotosPermissionService();
 
   bool _isPermissionGranted = false;
   bool get isPermissionGranted => _isPermissionGranted;
@@ -202,10 +207,10 @@ class SelectPhotoViewModel extends ChangeNotifier {
 
   void setAspectRatio() {
     if (multiple) return;
-    if (_aspectRatio == (4 / 3)) {
+    if (_aspectRatio == (3 / 4)) {
       _aspectRatio = 1;
     } else {
-      _aspectRatio = 4 / 3;
+      _aspectRatio = 3 / 4;
     }
     notifyListeners();
   }
@@ -256,5 +261,23 @@ class SelectPhotoViewModel extends ChangeNotifier {
   void onPanelSlide(double value) {
     _backdropHeight = (maxHeight - minHeight) * value;
     notifyListeners();
+  }
+
+  Future<void> crop(BuildContext context) async {
+    final files = <File>[];
+    await Future.forEach(_selectedPhotos, (photo) async {
+      final key = photo.key;
+      final file = photo.file;
+
+      if (key != null && file != null) {
+        final bytes = await Cropper.crop(cropperKey: key);
+        if (bytes != null) {
+          final item = await _fileService.createInCache(file.path, bytes);
+          files.add(item);
+        }
+      }
+    });
+
+    AppNavigator.push(CreatePostRoute(files: files));
   }
 }

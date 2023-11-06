@@ -5,6 +5,7 @@ import 'package:rugram/application/ui/screens/login_widget/login_view_model.dart
 import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/buttons/buttons.dart';
 import 'package:rugram/application/ui/widgets/divider_widget.dart';
+import 'package:rugram/application/ui/widgets/footer_view.dart';
 import 'package:rugram/application/ui/widgets/input_widget.dart';
 import 'package:rugram/application/ui/widgets/safe_area_bottom_widget.dart';
 
@@ -15,10 +16,22 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<LoginViewModel>();
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: FooterView(
+        footer: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DividerWidget(
+              margin: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            SizedBox(height: 32),
+            Text(
+              'Rugram from Машинки',
+              style: AppTextStyle.primary400x06,
+            ),
+            SafeAreaBottomWidget(height: 32),
+          ],
+        ),
         children: [
-          const Spacer(),
           const Text(
             'Rugram',
             style: TextStyle(
@@ -39,15 +52,15 @@ class LoginScreen extends StatelessWidget {
             obscureText: true,
             controller: viewModel.password,
           ),
-          const SizedBox(height: 20),
-          Align(
-            alignment: Alignment.centerRight,
-            child: HyperlinkWidget(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              text: 'Forgot password?',
-              onTap: () {},
-            ),
-          ),
+          // const SizedBox(height: 20),
+          // Align(
+          //   alignment: Alignment.centerRight,
+          //   child: HyperlinkWidget(
+          //     margin: const EdgeInsets.symmetric(horizontal: 16),
+          //     text: 'Забыли пароль?',
+          //     onTap: () {},
+          //   ),
+          // ),
           const SizedBox(height: 30),
           CustomButton(
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -67,16 +80,6 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Spacer(),
-          const DividerWidget(
-            margin: EdgeInsets.symmetric(horizontal: 16),
-          ),
-          const SizedBox(height: 32),
-          const Text(
-            'Rugram from Машинки',
-            style: AppTextStyle.primary400x06,
-          ),
-          const SafeAreaBottomWidget(height: 32),
         ],
       ),
     );
