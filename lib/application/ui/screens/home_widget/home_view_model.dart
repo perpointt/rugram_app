@@ -9,7 +9,7 @@ class HomeViewModel {
       path: AppRouteNames.welcome,
     ),
     AppNavigationItem(
-      icon: Icons.add_box,
+      icon: Icons.add_box_outlined,
       path: AppRouteNames.select,
     ),
     AppNavigationItem(

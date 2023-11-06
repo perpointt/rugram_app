@@ -1,3 +1,5 @@
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 import 'package:rugram/data/data_providers/version_data_provider.dart';
 import 'package:rugram/data/servies/app_service.dart';
 import 'package:rugram/domain/data_providers/version_data_provider.dart';
@@ -15,5 +17,10 @@ class AppServiceImpl implements AppService {
     final buildNumber = await versionDataProvider.getBuildNumber();
 
     return '$version+$buildNumber';
+  }
+
+  @override
+  Future<void> openSettings() async {
+    await permission_handler.openAppSettings();
   }
 }

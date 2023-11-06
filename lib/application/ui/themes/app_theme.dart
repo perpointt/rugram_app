@@ -6,7 +6,7 @@ abstract class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       shadowColor: AppColors.appbarShadow,
-      elevation: 0.6,
+      elevation: 0.4,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,

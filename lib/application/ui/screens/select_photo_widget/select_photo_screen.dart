@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_view_model.dart';
 import 'package:rugram/application/ui/themes/themes.dart';
+import 'package:rugram/application/ui/widgets/restricted_widget/restricted_widget.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 class SelectPhotoScreen extends StatelessWidget {
@@ -18,37 +19,27 @@ class SelectPhotoScreen extends StatelessWidget {
       return value.isPermissionGranted;
     });
     return Scaffold(
-      body: isPermissionGranted
-          ? const _BodyWidget()
-          : const _NoPermissionWidget(),
+      body:
+          isPermissionGranted ? const _BodyWidget() : const _RestrictedWidget(),
     );
   }
 }
 
-class _NoPermissionWidget extends StatelessWidget {
-  const _NoPermissionWidget();
+class _RestrictedWidget extends StatelessWidget {
+  const _RestrictedWidget();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            children: [
-              AppBar(
-                title: Text(
-                  AppNavigator.uri.toString(),
-                ),
-              ),
-            ],
+        AppBar(elevation: 0),
+        const Expanded(
+          child: RestrictedWidget(
+            title: 'Пожалуйста, разрешите доступ к вашим фотографиям',
+            description:
+                'Это позволит Rugram делиться фотографиями из вашей библиотеки и сохранять фотографии в галерею.',
           ),
         ),
-        const Spacer(),
-        const Center(
-          child: Text('Предоставьте доступ к камере'),
-        ),
-        const Spacer(),
       ],
     );
   }
@@ -72,6 +63,7 @@ class _BodyWidget extends StatelessWidget {
           slideDirection: SlideDirection.DOWN,
           onPanelSlide: viewModel.onPanelSlide,
           body: const _GridWidget(),
+          color: Colors.black,
         ),
         const _AppBarWidget(),
       ],
@@ -286,17 +278,43 @@ class _EditorWidget extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 1,
             child: Center(
-              child: IndexedStack(
-                alignment: Alignment.center,
-                index: select.stackIndex,
-                children: select.selectedPhotos.map((photo) {
-                  return _CropWidget(photo: photo);
-                }).toList(),
-              ),
+              child: select.selectedPhotos.isEmpty
+                  ? const _NoMediaWidget()
+                  : IndexedStack(
+                      alignment: Alignment.center,
+                      index: select.stackIndex,
+                      children: select.selectedPhotos.map((photo) {
+                        return _CropWidget(photo: photo);
+                      }).toList(),
+                    ),
             ),
           ),
         ),
         const _EditorBottomWudget(),
+      ],
+    );
+  }
+}
+
+class _NoMediaWidget extends StatelessWidget {
+  const _NoMediaWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Сейчас тут пусто',
+          style: AppTextStyle.title,
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 20),
+        Text(
+          'Ваши фотографии и видео появятся здесь.',
+          style: AppTextStyle.primary400x06,
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }
@@ -307,7 +325,7 @@ class _EditorBottomWudget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.read<SelectPhotoViewModel>();
+    final viewModel = context.watch<SelectPhotoViewModel>();
     return Container(
       width: double.infinity,
       height: 56,
@@ -315,10 +333,12 @@ class _EditorBottomWudget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          IconButton(
-            onPressed: viewModel.toggleMultiple,
-            icon: const Icon(Icons.auto_awesome_motion_outlined),
-          ),
+          if (viewModel.selectedPhotos.isNotEmpty) ...[
+            IconButton(
+              onPressed: viewModel.toggleMultiple,
+              icon: const Icon(Icons.auto_awesome_motion_outlined),
+            ),
+          ],
           IconButton(
             onPressed: () => AppNavigator.navigateNamedTo(
               context,

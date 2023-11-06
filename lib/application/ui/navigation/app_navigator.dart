@@ -40,6 +40,7 @@ class _Router extends _$_Router {
               path: AppRouteNames.camera,
               page: CameraRoute.page,
               maintainState: false,
+              fullscreenDialog: true,
             ),
             AutoRoute(
               path: '',
@@ -64,6 +65,7 @@ class _Router extends _$_Router {
         AutoRoute(
           path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.select]),
           page: SelectPhotoRoute.page,
+          fullscreenDialog: true,
         ),
         AutoRoute(
           path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.create]),

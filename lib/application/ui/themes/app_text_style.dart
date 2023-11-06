@@ -1,6 +1,14 @@
 part of 'themes.dart';
 
 abstract class AppTextStyle {
+  static const title = TextStyle(
+    color: AppColors.white06,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    height: 0,
+    letterSpacing: -0.15,
+  );
+
   static const primary600 = TextStyle(
     color: Colors.white,
     fontSize: 14,

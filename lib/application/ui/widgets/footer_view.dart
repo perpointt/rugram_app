@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class FooterView extends StatelessWidget {
   final List<Widget> children;
   final Widget? footer;
+  final EdgeInsets padding;
   const FooterView({
     super.key,
     this.children = const <Widget>[],
     this.footer,
+    this.padding = EdgeInsets.zero,
   });
 
   @override
@@ -15,6 +17,7 @@ class FooterView extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return SingleChildScrollView(
+          padding: padding,
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: constraints.maxHeight,

@@ -11,6 +11,7 @@ class MainScreen extends StatelessWidget {
         CameraRoute(),
         HomeRoute(),
       ],
+      homeIndex: 1,
     );
   }
 }

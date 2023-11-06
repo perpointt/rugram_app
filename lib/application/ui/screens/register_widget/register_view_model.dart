@@ -10,8 +10,10 @@ class RegisterViewModel {
   final _service = AuthServiceImpl();
 
   Future<void> register(BuildContext context) async {
-    await _service.register(_createRequest());
-    AppNavigator.replaceNamed(AppRouteNames.app);
+    try {
+      await _service.register(_createRequest());
+      AppNavigator.replaceNamed(AppRouteNames.app);
+    } catch (error) {}
   }
 
   Map<String, String> _createRequest() {
