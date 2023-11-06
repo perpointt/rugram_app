@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cropperx/cropperx.dart';
 import 'package:dartx/dartx.dart';
@@ -221,6 +220,16 @@ class SelectPhotoViewModel extends ChangeNotifier {
       addSelectedPhoto(photo);
     } else {
       notifyListeners();
+    }
+  }
+
+  void toggleMultiple() {
+    final photo = _selectedPhotos.firstOrNull;
+    if (photo == null) {
+      _multiple = !_multiple;
+      notifyListeners();
+    } else {
+      setMultiple(photo, !_multiple);
     }
   }
 

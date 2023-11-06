@@ -17,9 +17,7 @@ class CreatePostViewModel {
     try {
       await _postService.create(_createRequest());
       await _fileService.delete(files);
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   Map<String, dynamic> _createRequest() {

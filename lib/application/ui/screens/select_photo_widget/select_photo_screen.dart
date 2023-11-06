@@ -5,6 +5,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/select_photo_widget/select_photo_view_model.dart';
+import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
 class SelectPhotoScreen extends StatelessWidget {
@@ -90,13 +91,16 @@ class _AppBarWidget extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: const Text('New post'),
+            title: const Text('Новый пост'),
             actions: [
               CupertinoButton(
                 onPressed: viewModel.selectedPhotos.isEmpty
                     ? null
                     : () => viewModel.crop(context),
-                child: const Text('Next'),
+                child: const Text(
+                  'Далее',
+                  style: AppTextStyle.hyperlink400f14,
+                ),
               ),
             ],
           ),
@@ -121,11 +125,11 @@ class _GridWidget extends StatelessWidget {
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
+              crossAxisSpacing: 0.5,
+              mainAxisSpacing: 0.5,
             ),
             itemCount: photos.length,
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(0.5),
             itemBuilder: (context, index) {
               return _ImageWidget(photo: photos[index]);
             },
@@ -187,7 +191,7 @@ class _ActiveImageWidget extends StatelessWidget {
     if (viewModel.isPhotoActive(photo)) {
       return IgnorePointer(
         child: Container(
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withOpacity(0.4),
         ),
       );
     } else {
@@ -224,11 +228,8 @@ class _ImageIndexWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.5),
-            border: Border.all(
-              color: index == -1 ? Colors.transparent : Colors.blue,
-              width: index == -1 ? 0 : 2,
-            ),
+            color: _getColor(index),
+            border: Border.all(color: Colors.white, width: 1),
           ),
           width: 24,
           height: 24,
@@ -243,6 +244,10 @@ class _ImageIndexWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
   }
+
+  Color _getColor(int index) {
+    return index == -1 ? Colors.white.withOpacity(0.5) : AppColors.accent;
+  }
 }
 
 class _BackdropWidget extends StatelessWidget {
@@ -255,7 +260,7 @@ class _BackdropWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: viewModel.minHeight),
       height: viewModel.backdropHeight,
-      color: Colors.red,
+      color: Colors.black,
     );
   }
 }
@@ -291,39 +296,37 @@ class _EditorWidget extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: double.infinity,
-          height: 56,
-          color: Colors.grey,
-          child: const _AspectWidget(),
-        ),
+        const _EditorBottomWudget(),
       ],
     );
   }
 }
 
-class _AspectWidget extends StatelessWidget {
-  const _AspectWidget();
+class _EditorBottomWudget extends StatelessWidget {
+  const _EditorBottomWudget();
 
   @override
   Widget build(BuildContext context) {
-    final multiple = context.select<SelectPhotoViewModel, bool>((value) {
-      return value.multiple;
-    });
-
-    return AnimatedOpacity(
-      opacity: multiple ? 0 : 1,
-      duration: const Duration(milliseconds: 200),
-      child: IgnorePointer(
-        ignoring: multiple,
-        child: Center(
-          child: IconButton(
-            onPressed: () {
-              context.read<SelectPhotoViewModel>().setAspectRatio();
-            },
-            icon: const Icon(Icons.add),
+    final viewModel = context.read<SelectPhotoViewModel>();
+    return Container(
+      width: double.infinity,
+      height: 56,
+      color: Colors.black,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          IconButton(
+            onPressed: viewModel.toggleMultiple,
+            icon: const Icon(Icons.auto_awesome_motion_outlined),
           ),
-        ),
+          IconButton(
+            onPressed: () => AppNavigator.navigateNamedTo(
+              context,
+              AppRouteNames.camera,
+            ),
+            icon: const Icon(Icons.camera_alt_outlined),
+          ),
+        ],
       ),
     );
   }
@@ -359,6 +362,9 @@ class _CropWidgetState extends State<_CropWidget>
       image: AssetEntityImage(photo.entity),
       overlayType: OverlayType.grid,
       aspectRatio: aspectRatio,
+      backgroundColor: Colors.black,
+      overlayColor: Colors.white,
+      gridLineThickness: 1,
     );
   }
 }

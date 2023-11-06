@@ -5,4 +5,5 @@ abstract class AppColors {
   static const secondary = Color(0xFF121212);
   static const white06 = Color(0xFF999999);
   static const divider = Color(0xFF262626);
+  static const appbarShadow = Color(0xFFA6A6AA);
 }

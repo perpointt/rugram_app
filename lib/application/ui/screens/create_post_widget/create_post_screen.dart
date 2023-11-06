@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/create_post_widget/create_post_view_model.dart';
+import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/divider_widget.dart';
 import 'package:rugram/application/ui/widgets/input_widget.dart';
 
@@ -20,12 +21,16 @@ class CreatePostScreen extends StatelessWidget {
           actions: [
             CupertinoButton(
               onPressed: () => viewModel.create(context),
-              child: const Text('Share'),
+              child: const Text(
+                'Поделиться',
+                style: AppTextStyle.hyperlink400f14,
+              ),
             ),
           ],
         ),
         body: Column(
           children: [
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(

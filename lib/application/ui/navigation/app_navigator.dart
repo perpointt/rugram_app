@@ -34,25 +34,32 @@ class _Router extends _$_Router {
       children: [
         AutoRoute(
           path: '',
-          page: HomeRoute.page,
-          initial: true,
+          page: MainRoute.page,
           children: [
             AutoRoute(
-              path: AppRouteNames.welcome,
-              page: WelcomeRoute.page,
-              initial: true,
+              path: AppRouteNames.camera,
+              page: CameraRoute.page,
               maintainState: false,
             ),
             AutoRoute(
-              path: AppRouteNames.profile,
-              page: ProfileRoute.page,
-              maintainState: false,
+              path: '',
+              page: HomeRoute.page,
+              initial: true,
+              children: [
+                AutoRoute(
+                  path: AppRouteNames.welcome,
+                  page: WelcomeRoute.page,
+                  initial: true,
+                  maintainState: false,
+                ),
+                AutoRoute(
+                  path: AppRouteNames.profile,
+                  page: ProfileRoute.page,
+                  maintainState: false,
+                ),
+              ],
             ),
           ],
-        ),
-        AutoRoute(
-          path: AppRouteNames.camera,
-          page: CameraRoute.page,
         ),
         AutoRoute(
           path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.select]),
@@ -298,7 +305,7 @@ class NavObserver extends AutoRouterObserver {
   @override
   void didChangeTabRoute(TabPageRoute route, TabPageRoute previousRoute) {
     if (kDebugMode) {
-      print('Tab route re-visited: ${AppNavigator.uri}');
+      print('Tab route re-visited: ${route.path}');
     }
   }
 }

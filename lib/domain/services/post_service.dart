@@ -17,7 +17,6 @@ class PostServiceImpl implements PostService {
 
   @override
   Future<void> create(Map<String, dynamic> data) async {
-    final result = await client.createPost(data);
-    print(result);
+    await client.createPost(data);
   }
 }

@@ -12,9 +12,7 @@ class LoginViewModel {
     try {
       await _service.login(_createRequest());
       AppNavigator.replaceNamed(AppRouteNames.app);
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 
   Map<String, String> _createRequest() {

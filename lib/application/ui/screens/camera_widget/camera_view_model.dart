@@ -1,1 +1,1 @@
-
+class CameraViewModel {}

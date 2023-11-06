@@ -5,6 +5,8 @@ abstract class AppTheme {
     scaffoldBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
+      shadowColor: AppColors.appbarShadow,
+      elevation: 0.6,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
@@ -38,6 +40,9 @@ abstract class AppTheme {
       ),
       fillColor: AppColors.secondary,
       filled: true,
+    ),
+    iconTheme: const IconThemeData(
+      color: Colors.white,
     ),
   );
 
