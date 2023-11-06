@@ -34,7 +34,6 @@ class _BottomNavigationBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<HomeViewModel>();
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
       currentIndex: viewModel.getActiveIndex(router.activeIndex),
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,

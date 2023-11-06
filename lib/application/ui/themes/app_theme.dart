@@ -1,35 +1,43 @@
 part of 'themes.dart';
 
 abstract class AppTheme {
-  static final light = ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+  static final dark = ThemeData(
+    scaffoldBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
-      titleTextStyle: AppTextStyle.primary,
-      titleSpacing: 8,
-      elevation: 0,
-      backgroundColor: Colors.white,
-      centerTitle: false,
-      iconTheme: IconThemeData(
-        color: AppColors.primary,
-        opacity: 0.32,
+      backgroundColor: Colors.black,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.black,
+      selectedIconTheme: IconThemeData(
+        color: Colors.white,
       ),
-      actionsIconTheme: IconThemeData(
-        color: AppColors.grey400,
-        opacity: 1,
+      unselectedIconTheme: IconThemeData(
+        color: Colors.white,
       ),
     ),
-    bottomAppBarTheme: const BottomAppBarTheme(
-      elevation: 0,
-      shadowColor: Colors.transparent,
-      height: 64,
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(color: Colors.white),
+      displayMedium: TextStyle(color: Colors.white),
+      bodyMedium: TextStyle(color: Colors.white),
+      titleMedium: TextStyle(color: Colors.white),
     ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        foregroundColor: AppColors.blue600,
-        textStyle: AppTextStyle.hyperlink.copyWith(
-          color: AppColors.blue400,
-        ),
+    buttonTheme: const ButtonThemeData(),
+    inputDecorationTheme: InputDecorationTheme(
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      errorBorder: border,
+      focusedErrorBorder: border,
+      hintStyle: AppTextStyle.primary600.copyWith(
+        color: Colors.white.withOpacity(0.6),
+        fontWeight: FontWeight.w400,
       ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 12,
+      ),
+      fillColor: AppColors.secondary,
+      filled: true,
     ),
   );
 
@@ -38,5 +46,13 @@ abstract class AppTheme {
     blurRadius: 4,
     offset: Offset(0, 0),
     spreadRadius: 0,
+  );
+
+  static var border = OutlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.white.withOpacity(0.2),
+      width: 0.5,
+    ),
+    borderRadius: BorderRadius.circular(5),
   );
 }

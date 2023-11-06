@@ -9,7 +9,8 @@ abstract class ApiClient {
     Map<String, dynamic> queryParameters,
   );
 
-  Future<Map<String, dynamic>> login(Map<String, dynamic> queryParameters);
-  Future<Map<String, dynamic>> register(Map<String, dynamic> queryParameters);
-  Future<Map<String, dynamic>> createPost(Map<String, dynamic> queryParameters);
+  Future<Map<String, dynamic>> login(Map<String, dynamic> data);
+  Future<Map<String, dynamic>> register(Map<String, dynamic> data);
+  Future<Map<String, dynamic>> createPost(Map<String, dynamic> data);
+  Future<Map<String, dynamic>> getUser(String username);
 }

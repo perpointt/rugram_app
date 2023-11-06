@@ -17,6 +17,6 @@ class Token {
 
   @override
   String toString() {
-    return 'Token{id: $id, value: $value}';
+    return value;
   }
 }

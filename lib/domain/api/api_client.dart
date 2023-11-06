@@ -10,16 +10,14 @@ class ApiClientImpl implements ApiClient {
     _install(interceptors);
   }
 
-  static const _host = 'https://api.pub.dev';
-
   late final Dio _client;
 
   void _install(List<Interceptor> interceptors) {
     final options = BaseOptions(
-      baseUrl: _host,
+      baseUrl: ApiMethods.host,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 3),
-      contentType: ContentType.json.value,
+      contentType: Headers.jsonContentType,
     );
 
     final client = Dio(options);
@@ -44,7 +42,10 @@ class ApiClientImpl implements ApiClient {
     Map<String, dynamic> queryParameters,
   ) async {
     try {
-      final response = await _client.get(method);
+      final response = await _client.get(
+        method,
+        queryParameters: queryParameters,
+      );
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);
@@ -57,11 +58,38 @@ class ApiClientImpl implements ApiClient {
     Map<String, dynamic> queryParameters,
   ) async {
     try {
-      final response = await _client.get(method);
+      final response = await _client.post(
+        method,
+        queryParameters: queryParameters,
+      );
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);
     }
+  }
+
+  Future<Map<String, dynamic>> _map(Map<String, dynamic> data) async {
+    final newData = <String, dynamic>{};
+
+    await Future.forEach(data.keys, (key) async {
+      final value = data[key];
+
+      if (value is Iterable<File>) {
+        final files = <MultipartFile>[];
+        await Future.forEach(value, (val) async {
+          final file = await MultipartFile.fromFile(val.path);
+          files.add(file);
+        });
+        newData[key] = files;
+      } else if (value is File) {
+        final file = await MultipartFile.fromFile(value.path);
+        newData[key] = file;
+      } else {
+        newData[key] = value;
+      }
+    });
+
+    return newData;
   }
 
   ApiException _capture(DioException exception) {
@@ -110,11 +138,15 @@ class ApiClientImpl implements ApiClient {
   }
 
   @override
-  Future<Map<String, dynamic>> createPost(
-    Map<String, dynamic> queryParameters,
-  ) async {
+  Future<Map<String, dynamic>> createPost(Map<String, dynamic> data) async {
     try {
-      final response = await _client.get(ApiMethods.create);
+      final response = await _client.post(
+        ApiMethods.create,
+        data: FormData.fromMap(await _map(data)),
+        options: Options(
+          contentType: Headers.multipartFormDataContentType,
+        ),
+      );
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);
@@ -122,11 +154,12 @@ class ApiClientImpl implements ApiClient {
   }
 
   @override
-  Future<Map<String, dynamic>> login(
-    Map<String, dynamic> queryParameters,
-  ) async {
+  Future<Map<String, dynamic>> login(Map<String, dynamic> data) async {
     try {
-      final response = await _client.get(ApiMethods.token);
+      final response = await _client.post(
+        ApiMethods.token,
+        data: data,
+      );
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);
@@ -134,11 +167,22 @@ class ApiClientImpl implements ApiClient {
   }
 
   @override
-  Future<Map<String, dynamic>> register(
-    Map<String, dynamic> queryParameters,
-  ) async {
+  Future<Map<String, dynamic>> register(Map<String, dynamic> data) async {
     try {
-      final response = await _client.get(ApiMethods.register);
+      final response = await _client.post(
+        ApiMethods.register,
+        data: data,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUser(String username) async {
+    try {
+      final response = await _client.get('${ApiMethods.user}$username/');
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);

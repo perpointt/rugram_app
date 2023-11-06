@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/screens/camera_widget/camera_screen.dart';
 import 'package:rugram/application/ui/screens/create_post_widget/create_post_screen.dart';
+import 'package:rugram/application/ui/screens/create_post_widget/create_post_view_model.dart';
 import 'package:rugram/application/ui/screens/home_widget/home_screen.dart';
 import 'package:rugram/application/ui/screens/home_widget/home_view_model.dart';
 import 'package:rugram/application/ui/screens/profile_widget/profile_screen.dart';
@@ -82,10 +85,14 @@ class SelectPhotoScreenFactory extends StatelessWidget {
 
 @RoutePage()
 class CreatePostScreenFactory extends StatelessWidget {
-  const CreatePostScreenFactory({super.key});
+  final List<File> images;
+  const CreatePostScreenFactory({super.key, required this.images});
 
   @override
   Widget build(BuildContext context) {
-    return const CreatePostScreen();
+    return Provider(
+      create: (_) => CreatePostViewModel(images),
+      child: const CreatePostScreen(),
+    );
   }
 }

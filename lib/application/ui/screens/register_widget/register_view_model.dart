@@ -3,9 +3,9 @@ import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/domain/services/auth_service.dart';
 
 class RegisterViewModel {
-  final nicknameCnrl = TextEditingController();
-  final emailCnrl = TextEditingController();
-  final passwordCnrl = TextEditingController();
+  final username = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   final _service = AuthServiceImpl();
 
@@ -16,9 +16,9 @@ class RegisterViewModel {
 
   Map<String, String> _createRequest() {
     return {
-      'username': nicknameCnrl.text,
-      'email': emailCnrl.text,
-      'password': passwordCnrl.text,
+      'username': username.text,
+      'email': email.text,
+      'password': password.text,
     };
   }
 }

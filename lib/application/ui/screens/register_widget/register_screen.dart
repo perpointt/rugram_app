@@ -4,7 +4,9 @@ import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/register_widget/register_view_model.dart';
 import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/buttons/buttons.dart';
+import 'package:rugram/application/ui/widgets/divider_widget.dart';
 import 'package:rugram/application/ui/widgets/input_widget.dart';
+import 'package:rugram/application/ui/widgets/safe_area_bottom_widget.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -16,36 +18,67 @@ class RegisterScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Spacer(),
           const Text(
-            'Регистарция',
-            style: AppTextStyle.primary,
+            'Rugram',
+            style: TextStyle(
+              fontSize: 36,
+              fontStyle: FontStyle.italic,
+            ),
           ),
-          const SizedBox(height: 16),
-          const InputWidget(
-            margin: EdgeInsets.all(16),
-            labelText: 'Юзернейм',
+          const SizedBox(height: 20),
+          const Text(
+            'Зарегистрируйтесь, чтобы смотреть\nфото и видео ваших друзей.',
+            style: AppTextStyle.primary400x06,
+            textAlign: TextAlign.center,
           ),
-          const InputWidget(
-            margin: EdgeInsets.all(16),
-            labelText: 'Логин',
+          const SizedBox(height: 40),
+          InputWidget(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            hintText: 'Nickname',
+            controller: viewModel.username,
           ),
-          const InputWidget(
-            margin: EdgeInsets.all(16),
-            labelText: 'Пароль',
+          const SizedBox(height: 12),
+          InputWidget(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            hintText: 'Email',
+            controller: viewModel.email,
           ),
+          const SizedBox(height: 12),
+          InputWidget(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            hintText: 'Password',
+            controller: viewModel.password,
+          ),
+          const SizedBox(height: 20),
           CustomButton(
-            margin: const EdgeInsets.all(16),
-            title: 'Зарегестрироваться',
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            title: 'Sign up',
             onTap: () => viewModel.register(context),
           ),
-          CustomButton(
-            background: AppColors.grey400,
-            margin: const EdgeInsets.all(16),
-            title: 'Войти',
-            onTap: () {
-              AppNavigator.navigateNamedTo(context, AppRouteNames.login);
-            },
+          const SizedBox(height: 40),
+          Center(
+            child: HyperlinkWidget(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              text: 'Log in',
+              onTap: () {
+                AppNavigator.navigateNamedTo(context, AppRouteNames.login);
+              },
+              prefix: const ['Have an account? '],
+              hyperlinkStyle: AppTextStyle.hyperlink400f14,
+            ),
           ),
+          const SizedBox(height: 20),
+          const Spacer(),
+          const DividerWidget(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+          ),
+          const SizedBox(height: 32),
+          const Text(
+            'Rugram from Машинки',
+            style: AppTextStyle.primary400x06,
+          ),
+          const SafeAreaBottomWidget(height: 32),
         ],
       ),
     );

@@ -34,9 +34,13 @@ abstract class _$_Router extends RootStackRouter {
       );
     },
     CreatePostRoute.name: (routeData) {
+      final args = routeData.argsAs<CreatePostRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const CreatePostScreenFactory(),
+        child: CreatePostScreenFactory(
+          key: args.key,
+          images: args.images,
+        ),
       );
     },
     HomeRoute.name: (routeData) {
@@ -122,16 +126,40 @@ class CameraRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [CreatePostScreenFactory]
-class CreatePostRoute extends PageRouteInfo<void> {
-  const CreatePostRoute({List<PageRouteInfo>? children})
-      : super(
+class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
+  CreatePostRoute({
+    Key? key,
+    required List<File> images,
+    List<PageRouteInfo>? children,
+  }) : super(
           CreatePostRoute.name,
+          args: CreatePostRouteArgs(
+            key: key,
+            images: images,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'CreatePostRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<CreatePostRouteArgs> page =
+      PageInfo<CreatePostRouteArgs>(name);
+}
+
+class CreatePostRouteArgs {
+  const CreatePostRouteArgs({
+    this.key,
+    required this.images,
+  });
+
+  final Key? key;
+
+  final List<File> images;
+
+  @override
+  String toString() {
+    return 'CreatePostRouteArgs{key: $key, images: $images}';
+  }
 }
 
 /// generated route for

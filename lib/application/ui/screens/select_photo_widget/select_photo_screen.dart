@@ -1,4 +1,5 @@
 import 'package:cropperx/cropperx.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
@@ -71,19 +72,42 @@ class _BodyWidget extends StatelessWidget {
           onPanelSlide: viewModel.onPanelSlide,
           body: const _GridWidget(),
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            children: [
-              AppBar(
-                title: Text(
-                  AppNavigator.uri.toString(),
-                ),
+        const _AppBarWidget(),
+      ],
+    );
+  }
+}
+
+class _AppBarWidget extends StatelessWidget {
+  const _AppBarWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<SelectPhotoViewModel>();
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Column(
+        children: [
+          AppBar(
+            title: const Text('New post'),
+            actions: [
+              CupertinoButton(
+                onPressed: viewModel.selectedPhotos.isEmpty
+                    ? null
+                    : () {
+                        AppNavigator.push(
+                          CreatePostRoute(
+                            images: viewModel.selectedPhotos.toFileList(),
+                          ),
+                        );
+                      },
+                child: const Text('Next'),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -340,6 +364,7 @@ class _CropWidgetState extends State<_CropWidget>
       cropperKey: photo.key,
       image: AssetEntityImage(photo.entity),
       overlayType: OverlayType.grid,
+      aspectRatio: aspectRatio,
     );
   }
 }

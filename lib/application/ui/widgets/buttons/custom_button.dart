@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
     this.onTap,
     this.title = '',
     this.color = Colors.white,
-    this.background = AppColors.blue200,
+    this.background = AppColors.accent,
     this.maxWidth = double.infinity,
     this.margin = EdgeInsets.zero,
   }) : super(key: key);
@@ -33,7 +33,7 @@ class CustomButton extends StatelessWidget {
           if (onTap == null) ...[
             _ButtonWidget(
               title: title,
-              background: Colors.white.withOpacity(0.5),
+              background: background.withOpacity(0.5),
               color: Colors.transparent,
             ),
           ],
@@ -60,16 +60,16 @@ class _ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: background,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(5),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           child: Center(
             child: Text(
               title,
-              style: AppTextStyle.primary.copyWith(color: color),
+              style: AppTextStyle.primary600.copyWith(color: color),
             ),
           ),
         ),

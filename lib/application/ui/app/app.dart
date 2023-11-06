@@ -19,7 +19,7 @@ class App extends StatelessWidget {
       ],
       supportedLocales: const [Locale('ru', 'RU')],
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       builder: (context, child) {
         return _AppObserver(
           child: child ?? const SizedBox.shrink(),

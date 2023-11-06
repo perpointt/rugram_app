@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -56,6 +55,11 @@ extension GalleryPhotoExt on List<GalleryPhoto?> {
 
   int get lastUnAvaliableIndex {
     return lastIndexWhere((photo) => photo != null);
+  }
+
+  List<File> toFileList() {
+    final items = List<GalleryPhoto>.from(whereNot((e) => e == null));
+    return List<File>.from(items.map((e) => e.file));
   }
 }
 
@@ -116,8 +120,8 @@ class SelectPhotoViewModel extends ChangeNotifier {
   List<GalleryPhoto?> _photosInEditor = <GalleryPhoto?>[];
   List<GalleryPhoto?> get photosInEditor => _photosInEditor;
 
-  List<GalleryPhoto?> _selectedPhotos = <GalleryPhoto?>[];
-  List<GalleryPhoto?> get selectedPhotos => _selectedPhotos;
+  List<GalleryPhoto> _selectedPhotos = <GalleryPhoto>[];
+  List<GalleryPhoto> get selectedPhotos => _selectedPhotos;
 
   int _stackIndex = 0;
   int get stackIndex => _stackIndex;
@@ -167,8 +171,7 @@ class SelectPhotoViewModel extends ChangeNotifier {
     if (selectedIndex == -1) {
       photo.setGlobalKey();
 
-      final items = List<GalleryPhoto?>.from(_selectedPhotos);
-
+      final items = List<GalleryPhoto>.from(_selectedPhotos);
       await photo.load();
 
       if (multiple || items.isEmpty) {
@@ -184,7 +187,7 @@ class SelectPhotoViewModel extends ChangeNotifier {
       _setStackIndex(editorIndex);
     } else if (multiple) {
       var editorItems = List<GalleryPhoto?>.from(_photosInEditor);
-      var selectedItems = List<GalleryPhoto?>.from(_selectedPhotos);
+      var selectedItems = List<GalleryPhoto>.from(_selectedPhotos);
 
       editorItems[editorIndex] = null;
       selectedItems.removeAt(selectedIndex);
@@ -233,7 +236,7 @@ class SelectPhotoViewModel extends ChangeNotifier {
   }
 
   GalleryFolder? _getRecentsFolder() {
-    return _folders.firstWhereOrNull((folder) => folder.isAll);
+    return _folders.firstOrNullWhere((folder) => folder.isAll);
   }
 
   List<GalleryFolder> _mapPathEntites(List<AssetPathEntity> paths) {
