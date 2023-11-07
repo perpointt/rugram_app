@@ -224,12 +224,14 @@ class SelectPhotoViewModel extends ChangeNotifier {
   }
 
   void toggleMultiple() {
-    final photo = _selectedPhotos.firstOrNull;
+    final photo = _selectedPhotos.lastOrNull;
+    final newValue = !_multiple;
     if (photo == null) {
-      _multiple = !_multiple;
+      _multiple = newValue;
       notifyListeners();
     } else {
-      setMultiple(photo, !_multiple);
+      if (_multiple) _selectedPhotos.clear();
+      setMultiple(photo, newValue);
     }
   }
 
