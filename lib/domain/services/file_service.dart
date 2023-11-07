@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart' as path;
+import 'package:photo_manager/photo_manager.dart';
 import 'package:rugram/data/servies/file_service.dart';
 
 class FileServiceImpl implements FileService {
@@ -26,6 +27,12 @@ class FileServiceImpl implements FileService {
     await Future.forEach(files, (file) async {
       await file.delete();
     });
+  }
+
+  @override
+  Future<void> saveToGallery(String filePath) async {
+    final editor = PhotoManager.editor;
+    await editor.saveImageWithPath(filePath, title: path.basename(filePath));
   }
 }
 

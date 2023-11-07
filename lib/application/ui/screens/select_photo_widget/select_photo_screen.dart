@@ -278,15 +278,17 @@ class _EditorWidget extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 1,
             child: Center(
-              child: select.selectedPhotos.isEmpty
-                  ? const _NoMediaWidget()
-                  : IndexedStack(
-                      alignment: Alignment.center,
-                      index: select.stackIndex,
-                      children: select.selectedPhotos.map((photo) {
-                        return _CropWidget(photo: photo);
-                      }).toList(),
-                    ),
+              child: !select.isInitialzied
+                  ? const SizedBox.shrink()
+                  : select.selectedPhotos.isEmpty
+                      ? const _NoMediaWidget()
+                      : IndexedStack(
+                          alignment: Alignment.center,
+                          index: select.stackIndex,
+                          children: select.selectedPhotos.map((photo) {
+                            return _CropWidget(photo: photo);
+                          }).toList(),
+                        ),
             ),
           ),
         ),

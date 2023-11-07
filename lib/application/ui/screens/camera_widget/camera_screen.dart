@@ -32,12 +32,6 @@ class CameraScreen extends StatelessWidget {
               },
             ),
           ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: SafeArea(
-              child: _TakePictureButton(),
-            ),
-          ),
         ],
       ),
     );
@@ -55,32 +49,38 @@ class _TakePictureButton extends StatelessWidget {
       return value.isPermissionGranted;
     });
 
-    return Container(
-      width: _size,
-      height: _size,
-      margin: const EdgeInsets.only(bottom: 16),
-      child: GestureDetector(
-        onTap: context.read<CameraViewModel>().takePicture,
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: isPermissionGranted ? Colors.white : AppColors.white06,
-                shape: BoxShape.circle,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: isPermissionGranted ? Colors.white : AppColors.white06,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1.5,
+    return SafeArea(
+      child: Transform.translate(
+        offset: const Offset(0, 22),
+        child: SizedBox(
+          width: _size,
+          height: _size,
+          child: GestureDetector(
+            onTap: () => context.read<CameraViewModel>().takePicture(context),
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color:
+                        isPermissionGranted ? Colors.white : AppColors.white06,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
+                Container(
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color:
+                        isPermissionGranted ? Colors.white : AppColors.white06,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -115,34 +115,138 @@ class _CameraWidgetState extends State<_CameraWidget>
 
   @override
   Widget build(BuildContext context) {
-    final mediaSize = MediaQuery.of(context).size;
     final viewModel = context.watch<CameraViewModel>();
     final controller = viewModel.controller;
-    final scale = viewModel.scale;
 
     if (controller == null) return const SizedBox.shrink();
 
-    return ClipRect(
-      clipper: _MediaSizeClipper(mediaSize),
-      child: Transform.scale(
-        scale: scale,
-        alignment: Alignment.topCenter,
-        child: CameraPreview(controller),
+    return Stack(
+      children: [
+        CameraPreview(
+          controller,
+          child: const _OverlayWidget(),
+        ),
+        const _SelectPhotoButton(),
+        const _CameraDescriptionButton(),
+        const _FlashButton(),
+      ],
+    );
+  }
+}
+
+class _OverlayWidget extends StatelessWidget {
+  const _OverlayWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.black.withOpacity(0.7),
+          ),
+        ),
+        const AspectRatio(aspectRatio: 1),
+        Expanded(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                color: Colors.black.withOpacity(0.7),
+              ),
+              const _TakePictureButton(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CameraDescriptionButton extends StatelessWidget {
+  const _CameraDescriptionButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: SafeArea(
+        child: GestureDetector(
+          onTap: context.read<CameraViewModel>().switchDescription,
+          child: Container(
+            width: 40,
+            height: 40,
+            margin: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: AppColors.divider,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.crop_rotate),
+          ),
+        ),
       ),
     );
   }
 }
 
-class _MediaSizeClipper extends CustomClipper<Rect> {
-  final Size mediaSize;
-  const _MediaSizeClipper(this.mediaSize);
-  @override
-  Rect getClip(Size size) {
-    return Rect.fromLTWH(0, 0, mediaSize.width, mediaSize.height);
-  }
+class _SelectPhotoButton extends StatelessWidget {
+  const _SelectPhotoButton();
 
   @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) {
-    return true;
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            AppNavigator.navigateNamedTo(context, AppRouteNames.app);
+            AppNavigator.navigateTo(context, const SelectPhotoRoute());
+          },
+          child: Container(
+            width: 40,
+            height: 40,
+            margin: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: AppColors.divider,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.image),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FlashButton extends StatelessWidget {
+  const _FlashButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<CameraViewModel>();
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: IconButton(
+          icon: _getIcon(viewModel.flashMode),
+          onPressed: viewModel.switchFlashMode,
+        ),
+      ),
+    );
+  }
+
+  Icon _getIcon(FlashMode mode) {
+    switch (mode) {
+      case FlashMode.off:
+        return const Icon(Icons.flash_off_outlined);
+      case FlashMode.always:
+        return const Icon(Icons.flash_on_outlined);
+      case FlashMode.auto:
+        return const Icon(Icons.flash_auto_outlined);
+      default:
+        return const Icon(Icons.flash_on_outlined);
+    }
   }
 }

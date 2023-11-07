@@ -1,11 +1,13 @@
 class AppException implements Exception {
   final dynamic error;
-  final StackTrace stackTrace;
+  late final StackTrace stackTrace;
 
   AppException({
     required this.error,
-    required this.stackTrace,
-  });
+    StackTrace? stackTrace,
+  }) {
+    this.stackTrace = stackTrace ?? StackTrace.current;
+  }
 
   @override
   String toString() {

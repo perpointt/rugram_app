@@ -89,11 +89,9 @@ class GalleryPhoto {
 class EditorSelect {
   final int stackIndex;
   final List<GalleryPhoto?> selectedPhotos;
+  final bool isInitialzied;
 
-  EditorSelect(
-    this.stackIndex,
-    this.selectedPhotos,
-  );
+  EditorSelect(this.stackIndex, this.selectedPhotos, this.isInitialzied);
 }
 
 class SelectPhotoViewModel extends ChangeNotifier {
@@ -111,6 +109,9 @@ class SelectPhotoViewModel extends ChangeNotifier {
   double get backdropHeight => _backdropHeight;
 
   final controller = PanelController();
+
+  bool _isInitialzied = false;
+  bool get isInitialzied => _isInitialzied;
 
   bool _isPermissionGranted = false;
   bool get isPermissionGranted => _isPermissionGranted;
@@ -137,14 +138,14 @@ class SelectPhotoViewModel extends ChangeNotifier {
   double get aspectRatio => _aspectRatio;
 
   EditorSelect get editorSelect {
-    return EditorSelect(_stackIndex, _photosInEditor);
+    return EditorSelect(_stackIndex, _photosInEditor, _isInitialzied);
   }
 
   Future<void> _init() async {
     _isPermissionGranted = await _photosPermissionService.request();
-    notifyListeners();
 
     if (_isPermissionGranted) {
+      notifyListeners();
       await PhotoManager.requestPermissionExtend();
       final paths = await PhotoManager.getAssetPathList(
         type: RequestType.image,
@@ -160,12 +161,16 @@ class SelectPhotoViewModel extends ChangeNotifier {
 
       final photos = await recents.fetchPhotos();
       _photos = photos;
+      _isInitialzied = true;
 
       if (_photos.isNotEmpty) {
         addSelectedPhoto(_photos.first);
       } else {
         notifyListeners();
       }
+    } else {
+      _isInitialzied = true;
+      notifyListeners();
     }
   }
 

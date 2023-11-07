@@ -5,9 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/domain/services/camera_permission_service.dart';
+import 'package:rugram/domain/services/crop_service.dart';
 import 'package:rugram/domain/services/file_service.dart';
-import 'package:rugram/resources/resources.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class CameraViewModel extends ChangeNotifier {
   CameraViewModel(BuildContext context) {
@@ -17,6 +16,8 @@ class CameraViewModel extends ChangeNotifier {
   static const kDefaultDuration = Duration(milliseconds: 150);
 
   final _cameraPermissionService = CameraPermissionService();
+  final _cropService = CropServiceImpl();
+  final _fileService = FileServiceImpl();
 
   CameraController? _controller;
   CameraController? get controller => _controller;
@@ -38,6 +39,11 @@ class CameraViewModel extends ChangeNotifier {
   bool _isPermissionGranted = false;
   bool get isPermissionGranted => _isPermissionGranted;
 
+  static var _flashMode = FlashMode.off;
+  FlashMode get flashMode => _flashMode;
+
+  var _cameras = <CameraDescription>[];
+
   Future<void> _init(BuildContext context) async {
     final isGranted = await _cameraPermissionService.request();
     _isPermissionGranted = isGranted;
@@ -45,17 +51,16 @@ class CameraViewModel extends ChangeNotifier {
 
     if (isGranted) {
       final cameras = await availableCameras();
+      _cameras = cameras;
+      if (_cameras.isEmpty) return;
 
-      if (cameras.isEmpty) return;
-
-      final CameraDescription description = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.front,
-        orElse: () => cameras.first,
-      );
+      final description = _getCameraDescription(CameraLensDirection.back);
+      if (description == null) return;
 
       final controller = _getCameraController(description);
       await controller.initialize();
-      await controller.setFlashMode(FlashMode.off);
+
+      await controller.setFlashMode(_flashMode);
       await controller.lockCaptureOrientation(DeviceOrientation.portraitUp);
 
       _setScale(context, controller);
@@ -65,6 +70,62 @@ class CameraViewModel extends ChangeNotifier {
       _controller = controller;
       notifyListeners();
     }
+  }
+
+  Future<void> switchFlashMode() async {
+    switch (_flashMode) {
+      case FlashMode.off:
+        await _controller?.setFlashMode(FlashMode.always);
+        _flashMode = FlashMode.always;
+        notifyListeners();
+        break;
+      case FlashMode.always:
+        await _controller?.setFlashMode(FlashMode.auto);
+        _flashMode = FlashMode.auto;
+        notifyListeners();
+        break;
+      case FlashMode.auto:
+        await _controller?.setFlashMode(FlashMode.off);
+        _flashMode = FlashMode.off;
+        notifyListeners();
+        break;
+      default:
+        break;
+    }
+  }
+
+  Future<void> switchDescription() async {
+    final controller = _controller;
+    if (controller == null) return;
+
+    final direction = controller.description.lensDirection;
+    switch (direction) {
+      case CameraLensDirection.front:
+        final description = _getCameraDescription(CameraLensDirection.back);
+        if (description == null || description.lensDirection == direction) {
+          return;
+        }
+        await controller.setDescription(description);
+        break;
+      case CameraLensDirection.back:
+        final description = _getCameraDescription(CameraLensDirection.front);
+        if (description == null || description.lensDirection == direction) {
+          return;
+        }
+        await controller.setDescription(description);
+        break;
+      default:
+        break;
+    }
+  }
+
+  CameraDescription? _getCameraDescription(CameraLensDirection direction) {
+    if (_cameras.isEmpty) return null;
+
+    return _cameras.firstWhere(
+      (camera) => camera.lensDirection == direction,
+      orElse: () => _cameras.first,
+    );
   }
 
   void onScaleStart(ScaleStartDetails details) {
@@ -94,7 +155,7 @@ class CameraViewModel extends ChangeNotifier {
 
       await newController.initialize();
       await newController.setZoomLevel(_zoomLevel);
-      await newController.setFlashMode(FlashMode.off);
+      await newController.setFlashMode(_flashMode);
       await newController.lockCaptureOrientation(DeviceOrientation.portraitUp);
 
       _controller = newController;
@@ -107,10 +168,16 @@ class CameraViewModel extends ChangeNotifier {
     return CameraController(description, preset, enableAudio: false);
   }
 
-  Future<void> takePicture() async {
+  Future<void> takePicture(BuildContext context) async {
     final controller = _controller;
     if (controller == null || !controller.value.isInitialized) return;
-    final _ = await controller.takePicture();
+
+    final xFile = await controller.takePicture();
+
+    await _fileService.saveToGallery(xFile.path);
+
+    final file = await _cropService.crop(File(xFile.path));
+    AppNavigator.navigateTo(context, CreatePostRoute(files: [file]));
   }
 
   Future<void> _setZoom(CameraController controller) async {
