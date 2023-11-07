@@ -63,7 +63,7 @@ class _BodyWidget extends StatelessWidget {
           slideDirection: SlideDirection.DOWN,
           onPanelSlide: viewModel.onPanelSlide,
           body: const _GridWidget(),
-          color: Colors.black,
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
         const _AppBarWidget(),
       ],
@@ -218,6 +218,7 @@ class _ImageIndexWidget extends StatelessWidget {
       return Align(
         alignment: Alignment.topRight,
         child: Container(
+          margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: _getColor(index),
@@ -227,7 +228,10 @@ class _ImageIndexWidget extends StatelessWidget {
           height: 24,
           child: Center(
             child: Text(
-              '${index == -1 ? '' : index}',
+              '${index == -1 ? '' : index + 1}',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -252,7 +256,7 @@ class _BackdropWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: viewModel.minHeight),
       height: viewModel.backdropHeight,
-      color: Colors.black,
+      color: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }
@@ -331,7 +335,7 @@ class _EditorBottomWudget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 56,
-      color: Colors.black,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

@@ -7,11 +7,19 @@ abstract class AppTheme {
       backgroundColor: Colors.black,
       shadowColor: AppColors.appbarShadow,
       elevation: 0.5,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+      ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
       selectedIconTheme: IconThemeData(
-        color: Colors.white,
+        color: AppColors.accent,
       ),
       unselectedIconTheme: IconThemeData(
         color: Colors.white,
@@ -43,6 +51,59 @@ abstract class AppTheme {
     ),
     iconTheme: const IconThemeData(
       color: Colors.white,
+    ),
+  );
+
+  static final light = ThemeData(
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      shadowColor: AppColors.appbarShadow,
+      elevation: 0.5,
+      iconTheme: IconThemeData(
+        color: Colors.black,
+      ),
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedIconTheme: IconThemeData(
+        color: AppColors.accent,
+      ),
+      unselectedIconTheme: IconThemeData(
+        color: Colors.black,
+      ),
+    ),
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(color: Colors.black),
+      displayMedium: TextStyle(color: Colors.black),
+      bodyMedium: TextStyle(color: Colors.black),
+      titleMedium: TextStyle(color: Colors.black),
+    ),
+    buttonTheme: const ButtonThemeData(),
+    inputDecorationTheme: InputDecorationTheme(
+      border: border,
+      enabledBorder: border,
+      focusedBorder: border,
+      errorBorder: border,
+      focusedErrorBorder: border,
+      hintStyle: AppTextStyle.primary600.copyWith(
+        color: Colors.black.withOpacity(0.6),
+        fontWeight: FontWeight.w400,
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 12,
+      ),
+      fillColor: Colors.grey.withOpacity(0.4),
+      filled: true,
+    ),
+    iconTheme: const IconThemeData(
+      color: Colors.black,
     ),
   );
 

@@ -7,7 +7,7 @@ class DividerWidget extends StatelessWidget {
   const DividerWidget({
     super.key,
     this.margin = EdgeInsets.zero,
-    this.height = 1,
+    this.height = 0.3,
   });
 
   @override

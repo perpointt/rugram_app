@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:rugram/application/ui/app/app.dart';
 import 'package:rugram/domain/database/database_client.dart';
 import 'package:rugram/domain/services/path_service.dart';
+import 'package:rugram/domain/services/theme_service.dart';
 import 'package:rugram/resources/resources.dart';
 
 class AppLauncher {
@@ -15,7 +16,8 @@ class AppLauncher {
 
     final directory = await PathServceImpl().getDirectory();
     await DatabaseClientImpl().open(directory.path);
+    final theme = await ThemeServiceImpl().fetchRecentTheme();
 
-    runApp(const App());
+    runApp(App(theme: theme));
   }
 }

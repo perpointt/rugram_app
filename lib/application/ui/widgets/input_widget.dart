@@ -27,7 +27,7 @@ class InputWidget extends StatelessWidget {
     return Container(
       margin: margin,
       child: TextFormField(
-        cursorColor: Colors.white,
+        cursorColor: Theme.of(context).textTheme.displayLarge?.color,
         controller: controller,
         decoration: decoration ?? InputDecoration(hintText: hintText),
         obscureText: obscureText,

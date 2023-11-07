@@ -14,25 +14,28 @@ class CameraScreen extends StatelessWidget {
     final isPermissionGranted = context.select<CameraViewModel, bool>((value) {
       return value.isPermissionGranted;
     });
-    return Scaffold(
-      body: Stack(
-        children: [
-          if (isPermissionGranted) const _CameraWidget(),
-          if (!isPermissionGranted) ...[
-            const RestrictedWidget(
-              title: 'Разрешите Rugram доступ к вашей камере и микрофону',
-              description:
-                  'Это позволит вам обмениваться фотографиями и записывать видео.',
+    return Theme(
+      data: AppTheme.dark,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            if (isPermissionGranted) const _CameraWidget(),
+            if (!isPermissionGranted) ...[
+              const RestrictedWidget(
+                title: 'Разрешите Rugram доступ к вашей камере и микрофону',
+                description:
+                    'Это позволит вам обмениваться фотографиями и записывать видео.',
+              ),
+            ],
+            SafeArea(
+              child: CloseButton(
+                onPressed: () {
+                  AppNavigator.navigateNamedTo(context, AppRouteNames.app);
+                },
+              ),
             ),
           ],
-          SafeArea(
-            child: CloseButton(
-              onPressed: () {
-                AppNavigator.navigateNamedTo(context, AppRouteNames.app);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

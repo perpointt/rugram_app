@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/application/ui/screens/home_widget/home_view_model.dart';
-import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/divider_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,15 +37,12 @@ class _BottomNavigationBarWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const DividerWidget(height: 0.5),
+        const DividerWidget(),
         BottomNavigationBar(
           currentIndex: viewModel.getActiveIndex(router.activeIndex),
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          selectedIconTheme: const IconThemeData(
-            color: AppColors.accent,
-          ),
           items: [
             ...viewModel.items.map((item) {
               return BottomNavigationBarItem(icon: Icon(item.icon), label: '');
