@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:rugram/application/ui/navigation/app_navigator.dart';
 import 'package:rugram/domain/services/file_service.dart';
 import 'package:rugram/domain/services/post_service.dart';
 
@@ -17,6 +18,7 @@ class CreatePostViewModel {
     try {
       await _postService.create(_createRequest());
       await _fileService.delete(files);
+      AppNavigator.navigateNamedTo(context, AppRouteNames.app);
     } catch (error) {}
   }
 
