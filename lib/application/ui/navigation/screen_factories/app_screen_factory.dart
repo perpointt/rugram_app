@@ -68,8 +68,8 @@ class CameraScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => CameraViewModel(),
+    return ChangeNotifierProvider(
+      create: (_) => CameraViewModel(context),
       child: const CameraScreen(),
     );
   }
