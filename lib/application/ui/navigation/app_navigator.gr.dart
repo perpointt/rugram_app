@@ -62,9 +62,16 @@ abstract class _$_Router extends RootStackRouter {
       );
     },
     ProfileRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<ProfileRouteArgs>(
+          orElse: () =>
+              ProfileRouteArgs(username: pathParams.getString('username')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfileScreenFactory(),
+        child: ProfileScreenFactory(
+          key: args.key,
+          username: args.username,
+        ),
       );
     },
     RegisterRoute.name: (routeData) {
@@ -212,16 +219,41 @@ class MainRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileScreenFactory]
-class ProfileRoute extends PageRouteInfo<void> {
-  const ProfileRoute({List<PageRouteInfo>? children})
-      : super(
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    Key? key,
+    required String username,
+    List<PageRouteInfo>? children,
+  }) : super(
           ProfileRoute.name,
+          args: ProfileRouteArgs(
+            key: key,
+            username: username,
+          ),
+          rawPathParams: {'username': username},
           initialChildren: children,
         );
 
   static const String name = 'ProfileRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    this.key,
+    required this.username,
+  });
+
+  final Key? key;
+
+  final String username;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{key: $key, username: $username}';
+  }
 }
 
 /// generated route for

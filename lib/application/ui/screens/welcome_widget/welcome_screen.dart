@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rugram/application/ui/navigation/app_navigator.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -8,7 +7,13 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppNavigator.uri.toString()),
+        title: const Text(
+          'Rugram',
+          style: TextStyle(
+            fontSize: 18,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ abstract class AppRouteNames {
   static const auth = '/auth';
   static const notFound = '/404';
 
-  static const profile = 'profile';
+  static const user = 'user';
   static const welcome = 'welcome';
   static const camera = 'camera';
   static const select = 'select';

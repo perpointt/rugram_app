@@ -54,13 +54,18 @@ class _Router extends _$_Router {
                   maintainState: false,
                 ),
                 AutoRoute(
-                  path: AppRouteNames.profile,
+                  path: '${AppRouteNames.user}/:username',
                   page: ProfileRoute.page,
                   maintainState: false,
                 ),
               ],
             ),
           ],
+        ),
+        AutoRoute(
+          path: '${AppRouteNames.user}/:username',
+          page: ProfileRoute.page,
+          maintainState: false,
         ),
         AutoRoute(
           path: AppRouteNames.join([AppRouteNames.post, AppRouteNames.select]),

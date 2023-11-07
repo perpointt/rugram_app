@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
+import 'package:rugram/domain/models/user/user.dart';
+import 'package:rugram/domain/services/user_service.dart';
 
-class HomeViewModel {
-  final items = [
-    AppNavigationItem(
-      icon: Icons.home,
-      route: const WelcomeRoute(),
-      path: AppRouteNames.welcome,
-    ),
-    AppNavigationItem(
-      icon: Icons.add_box_outlined,
-      path: AppRouteNames.select,
-    ),
-    AppNavigationItem(
-      icon: Icons.person,
-      route: const ProfileRoute(),
-      path: AppRouteNames.profile,
-    ),
-  ];
+class HomeViewModel extends ChangeNotifier {
+  final _userService = UserServiceImpl();
+
+  HomeViewModel() {
+    _init();
+  }
+
+  User? _user;
+
+  Future<void> _init() async {
+    _user = await _userService.fetchUserFromCache();
+    notifyListeners();
+  }
+
+  List<AppNavigationItem> get items {
+    return [
+      AppNavigationItem(
+        icon: Icons.home,
+        route: const WelcomeRoute(),
+        path: AppRouteNames.welcome,
+      ),
+      AppNavigationItem(
+        icon: Icons.add_box_outlined,
+        path: AppRouteNames.select,
+      ),
+      AppNavigationItem(
+        icon: Icons.person,
+        route: ProfileRoute(username: _user?.username ?? ''),
+        path: AppRouteNames.user,
+      ),
+    ];
+  }
 
   List<PageRouteInfo<void>> get routes {
     final values = items.map((e) => e.route).toList();

@@ -32,7 +32,7 @@ class HomeScreenFactory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ChangeNotifierProvider(
       create: (_) => HomeViewModel(),
       child: const HomeScreen(),
     );
@@ -51,12 +51,16 @@ class WelcomeScreenFactory extends StatelessWidget {
 
 @RoutePage()
 class ProfileScreenFactory extends StatelessWidget {
-  const ProfileScreenFactory({super.key});
+  final String username;
+  const ProfileScreenFactory({
+    super.key,
+    @PathParam('username') required this.username,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => ProfileViewModel(),
+    return ChangeNotifierProvider(
+      create: (_) => ProfileViewModel(username),
       child: const ProfileScreen(),
     );
   }
