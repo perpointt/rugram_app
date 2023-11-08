@@ -131,7 +131,7 @@ abstract class AppNavigator {
     }
   }
 
-  static void openDialog({
+  static Future<void> openDialog({
     required BuildContext context,
     required Widget dialog,
     bool barrierDismissible = true,
