@@ -1,5 +1,5 @@
 abstract class ApiMethods {
-  static const host = 'http://rugram.online';
+  static const host = 'https://rugram.online';
   static const register = '/api/user/create/';
   static const token = '/api/user/token/';
   static const create = '/api/post/create/';

@@ -3,6 +3,14 @@ part of 'themes.dart';
 abstract class AppTheme {
   static final dark = ThemeData(
     scaffoldBackgroundColor: Colors.black,
+    tabBarTheme: const TabBarTheme(
+      indicator: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          bottom: BorderSide(color: Colors.white, width: 1),
+        ),
+      ),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       shadowColor: AppColors.appbarShadow,
@@ -56,6 +64,14 @@ abstract class AppTheme {
 
   static final light = ThemeData(
     scaffoldBackgroundColor: Colors.white,
+    tabBarTheme: const TabBarTheme(
+      indicator: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          bottom: BorderSide(color: Colors.black, width: 1),
+        ),
+      ),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       shadowColor: AppColors.appbarShadow,

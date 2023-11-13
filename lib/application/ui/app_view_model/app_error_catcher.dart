@@ -3,7 +3,7 @@ import 'package:rugram/domain/services/exception_service.dart';
 
 typedef CaptureFunc<T> = T Function(ApiException);
 
-class AppErrorCatcher {
+mixin class AppErrorCatcher {
   static final _service = ExceptionServiceImpl();
 
   void captureExcepton<T>({

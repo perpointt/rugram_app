@@ -6,9 +6,11 @@ class AppStateNotifier extends ChangeNotifier {
   AppState _state = InitialAppState();
   AppState get state => _state;
 
-  void setState(AppState state) {
+  void setState(AppState state, [bool silent = false]) {
     if (_state == state) return;
     _state = state;
+
+    if (silent) return;
     notifyListeners();
   }
 

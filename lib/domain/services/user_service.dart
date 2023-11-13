@@ -23,7 +23,8 @@ class UserServiceImpl implements UserService {
   }
 
   @override
-  Future<User?> fetchUserFromApi() {
-    throw UnimplementedError();
+  Future<User?> fetchUserFromApi(String username) async {
+    final response = await client.getUser(username);
+    return User.fromJson(response);
   }
 }
