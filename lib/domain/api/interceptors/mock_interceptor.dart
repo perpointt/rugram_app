@@ -20,7 +20,7 @@ class MockInterceptor extends Interceptor {
         return handler.resolve(
           Response(requestOptions: options, data: response),
         );
-      case ApiMethods.create:
+      case ApiMethods.postCreate:
         final response = await _loadAsset(MockResources.createPost);
         return handler.resolve(
           Response(requestOptions: options, data: response),

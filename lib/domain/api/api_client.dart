@@ -152,7 +152,7 @@ class ApiClientImpl implements ApiClient {
   Future<Map<String, dynamic>> createPost(Map<String, dynamic> data) async {
     try {
       final response = await _client.post(
-        ApiMethods.create,
+        ApiMethods.postCreate,
         data: FormData.fromMap(await _map(data)),
         options: Options(
           contentType: Headers.multipartFormDataContentType,
@@ -194,6 +194,81 @@ class ApiClientImpl implements ApiClient {
   Future<Map<String, dynamic>> getUser(String username) async {
     try {
       final response = await _client.get('${ApiMethods.user}$username/');
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUserFromSession() async {
+    try {
+      final response = await _client.get(ApiMethods.userProfile);
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> createLike(int id) async {
+    try {
+      final response = await _client.post('${ApiMethods.likeCreate}$id');
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> deleteLike(int id) async {
+    try {
+      final response = await _client.delete(
+        ApiMethods.likeDelete,
+        queryParameters: {'post_id': id},
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> deletePost(int id) async {
+    try {
+      final endpoint = '${ApiMethods.post}$id${ApiMethods.delete}';
+      final response = await _client.delete(endpoint);
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getAllPosts(String username) async {
+    try {
+      final response = await _client.get('${ApiMethods.postAll}$username');
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getPost(int id) async {
+    try {
+      final response = await _client.get('${ApiMethods.post}$id');
+      return response.data;
+    } on DioException catch (e) {
+      throw _capture(e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updatePost(int id, String caption) async {
+    try {
+      final endpoint = '${ApiMethods.post}$id${ApiMethods.update}';
+      final response = await _client.put(endpoint, data: {'caption': caption});
       return response.data;
     } on DioException catch (e) {
       throw _capture(e);

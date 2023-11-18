@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rugram/application/ui/navigation/app_navigator.dart';
-import 'package:rugram/domain/models/user/user.dart';
-import 'package:rugram/domain/services/user_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final _userService = UserServiceImpl();
-
-  HomeViewModel() {
-    _init();
-  }
-
-  User? _user;
-
-  Future<void> _init() async {
-    _user = await _userService.fetchUserFromCache();
-    notifyListeners();
-  }
-
   List<AppNavigationItem> get items {
     return [
       AppNavigationItem(
@@ -30,7 +15,7 @@ class HomeViewModel extends ChangeNotifier {
       ),
       AppNavigationItem(
         icon: Icons.person,
-        route: ProfileRoute(username: _user?.username ?? ''),
+        route: ProfileRoute(session: true),
         path: AppRouteNames.user,
       ),
     ];

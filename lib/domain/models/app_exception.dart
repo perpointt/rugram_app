@@ -20,8 +20,8 @@ class ApiException extends AppException {
   final int? statusCode;
 
   ApiException({
-    required dynamic error,
-    required StackTrace stackTrace,
+    dynamic error,
+    StackTrace? stackTrace,
     required this.type,
     this.statusCode,
   }) : super(error: error, stackTrace: stackTrace);

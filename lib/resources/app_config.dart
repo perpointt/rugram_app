@@ -35,4 +35,7 @@ abstract class AppConfig {
   static const bugsnagKey = '';
 
   static const appMetricaKey = '';
+
+  static const firebaseHost =
+      'https://storage.googleapis.com/rugram-d9c7d.appspot.com/posts';
 }

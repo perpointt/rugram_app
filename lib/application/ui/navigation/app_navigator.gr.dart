@@ -63,14 +63,24 @@ abstract class _$_Router extends RootStackRouter {
     },
     ProfileRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
+      final queryParams = routeData.queryParams;
       final args = routeData.argsAs<ProfileRouteArgs>(
-          orElse: () =>
-              ProfileRouteArgs(username: pathParams.getString('username')));
+          orElse: () => ProfileRouteArgs(
+                username: pathParams.getString(
+                  'username',
+                  '',
+                ),
+                session: queryParams.getBool(
+                  'session',
+                  false,
+                ),
+              ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProfileScreenFactory(
           key: args.key,
           username: args.username,
+          session: args.session,
         ),
       );
     },
@@ -222,15 +232,18 @@ class MainRoute extends PageRouteInfo<void> {
 class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
     Key? key,
-    required String username,
+    String username = '',
+    bool session = false,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileRoute.name,
           args: ProfileRouteArgs(
             key: key,
             username: username,
+            session: session,
           ),
           rawPathParams: {'username': username},
+          rawQueryParams: {'session': session},
           initialChildren: children,
         );
 
@@ -243,16 +256,19 @@ class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
 class ProfileRouteArgs {
   const ProfileRouteArgs({
     this.key,
-    required this.username,
+    this.username = '',
+    this.session = false,
   });
 
   final Key? key;
 
   final String username;
 
+  final bool session;
+
   @override
   String toString() {
-    return 'ProfileRouteArgs{key: $key, username: $username}';
+    return 'ProfileRouteArgs{key: $key, username: $username, session: $session}';
   }
 }
 

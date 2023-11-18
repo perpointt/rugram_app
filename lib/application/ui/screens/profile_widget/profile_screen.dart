@@ -1,9 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rugram/application/ui/navigation/app_navigator.dart';
+import 'package:rugram/application/ui/screens/post_preview_widget/post_preview_screen.dart';
 import 'package:rugram/application/ui/screens/profile_widget/profile_view_model.dart';
 import 'package:rugram/application/ui/themes/themes.dart';
 import 'package:rugram/application/ui/widgets/buttons/buttons.dart';
 import 'dart:math' as math;
+
+import 'package:rugram/domain/models/post/post.dart';
+import 'package:rugram/resources/resources.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,72 +27,54 @@ class _ProfileScreenState extends State<ProfileScreen>
     _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
   }
 
-  double getHeight() {
-    return 800;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const _AppBarTitle(),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
             DefaultTabController(
-              length: 3,
+              length: 2,
               child: NestedScrollView(
                 headerSliverBuilder: (context, value) {
                   return [
-                    const SliverAppBar(
-                      pinned: true,
-                      title: _AppBarTitle(),
-                    ),
                     const SliverToBoxAdapter(
                       child: _ProfileInfoWidget(),
                     ),
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: 46,
-                        maxHeight: 46,
-                        child: TabBar(
-                          controller: _tabController,
-                          tabs: [
-                            Tab(
-                              icon: Theme(
-                                data: Theme.of(context),
-                                child: const Icon(Icons.grid_on_rounded),
-                              ),
-                            ),
-                            Tab(
-                              icon: Theme(
-                                data: Theme.of(context),
-                                child: const Icon(Icons.person_pin_outlined),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ];
                 },
-                body: TabBarView(
-                  controller: _tabController,
+                body: Column(
                   children: [
-                    SingleChildScrollView(
-                      child: Container(
-                        padding: const EdgeInsets.only(bottom: 10000),
-                        child: const Column(
-                          children: [],
-                        ),
+                    Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: TabBar(
+                        controller: _tabController,
+                        tabs: [
+                          Tab(
+                            icon: Theme(
+                              data: Theme.of(context),
+                              child: const Icon(Icons.grid_on_rounded),
+                            ),
+                          ),
+                          Tab(
+                            icon: Theme(
+                              data: Theme.of(context),
+                              child: const Icon(Icons.person_pin_outlined),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SingleChildScrollView(
-                      child: Container(
-                        padding: const EdgeInsets.only(bottom: 10000),
-                        child: const Column(
-                          children: [],
-                        ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          const _PostsGridWidget(),
+                          const _PostsGridWidget(),
+                        ],
                       ),
                     ),
                   ],
@@ -94,6 +82,46 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PostsGridWidget extends StatelessWidget {
+  const _PostsGridWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<ProfileViewModel>();
+    final posts = viewModel.posts;
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 0.5,
+        mainAxisSpacing: 0.5,
+      ),
+      itemCount: posts.length,
+      padding: const EdgeInsets.all(0.5),
+      itemBuilder: (context, index) {
+        return _PostPreviewWidget(post: posts[index]);
+      },
+    );
+  }
+}
+
+class _PostPreviewWidget extends StatelessWidget {
+  final Post post;
+  const _PostPreviewWidget({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: 'PostPreviewScreen',
+      child: GestureDetector(
+        onLongPress: () {},
+        child: CachedNetworkImage(
+          imageUrl: '${AppConfig.firebaseHost}/${post.filenames.first}',
         ),
       ),
     );

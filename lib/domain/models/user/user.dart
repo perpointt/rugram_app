@@ -9,6 +9,7 @@ class User {
   final Id id;
   final String name;
   final String email;
+  @Index(type: IndexType.value)
   final String username;
   @JsonKey(fromJson: _pictureFromJson)
   final String avatar;

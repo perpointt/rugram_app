@@ -52,15 +52,17 @@ class WelcomeScreenFactory extends StatelessWidget {
 @RoutePage()
 class ProfileScreenFactory extends StatelessWidget {
   final String username;
+  final bool session;
   const ProfileScreenFactory({
     super.key,
-    @PathParam('username') required this.username,
+    @PathParam('username') this.username = '',
+    @QueryParam('session') this.session = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ProfileViewModel(username),
+      create: (_) => ProfileViewModel(username, session),
       child: const ProfileScreen(),
     );
   }

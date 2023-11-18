@@ -7,9 +7,17 @@ class UserDataProviderImpl implements UserDataProvider {
   final _client = DatabaseClientImpl();
 
   @override
-  Future<User?> fetchUser() async {
-    final collection = await _client.instance.users.where().findAll();
-    return collection.firstOrNull;
+  Future<User?> fetchUser(String username) async {
+    final user = await _client.instance.users
+        .where()
+        .usernameEqualTo(username)
+        .findFirst();
+    return user;
+  }
+
+  @override
+  Future<User?> fetchUserById(int id) {
+    return _client.instance.users.get(id);
   }
 
   @override

@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:rugram/data/data_providers/token_data_provider.dart';
+import 'package:rugram/data/data_providers/session_data_provider.dart';
 
 class AuthInterceptor extends Interceptor {
-  final TokenDataProvider tokenDataProvider;
+  final SessionDataProvider sessionDataProvider;
 
-  AuthInterceptor(this.tokenDataProvider);
+  AuthInterceptor(this.sessionDataProvider);
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await tokenDataProvider.fetchToken();
-
+    final session = await sessionDataProvider.fetchSession();
+    final token = session?.token;
     if (token == null) {
       super.onRequest(options, handler);
     } else {

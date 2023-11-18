@@ -53,7 +53,21 @@ const UserSchema = CollectionSchema(
   deserialize: _userDeserialize,
   deserializeProp: _userDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'username': IndexSchema(
+      id: -2899563114555695793,
+      name: r'username',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'username',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _userGetId,
@@ -148,6 +162,14 @@ extension UserQueryWhereSort on QueryBuilder<User, User, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<User, User, QAfterWhere> anyUsername() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'username'),
+      );
+    });
+  }
 }
 
 extension UserQueryWhere on QueryBuilder<User, User, QWhereClause> {
@@ -213,6 +235,141 @@ extension UserQueryWhere on QueryBuilder<User, User, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameEqualTo(String username) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'username',
+        value: [username],
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameNotEqualTo(
+      String username) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'username',
+              lower: [],
+              upper: [username],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'username',
+              lower: [username],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'username',
+              lower: [username],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'username',
+              lower: [],
+              upper: [username],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameGreaterThan(
+    String username, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'username',
+        lower: [username],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameLessThan(
+    String username, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'username',
+        lower: [],
+        upper: [username],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameBetween(
+    String lowerUsername,
+    String upperUsername, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'username',
+        lower: [lowerUsername],
+        includeLower: includeLower,
+        upper: [upperUsername],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameStartsWith(
+      String UsernamePrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'username',
+        lower: [UsernamePrefix],
+        upper: ['$UsernamePrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'username',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<User, User, QAfterWhereClause> usernameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'username',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'username',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'username',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'username',
+              upper: [''],
+            ));
+      }
     });
   }
 }

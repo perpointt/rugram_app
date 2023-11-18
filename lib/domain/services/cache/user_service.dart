@@ -8,35 +8,28 @@ import 'package:rugram/domain/data_providers/session_data_provider.dart';
 import 'package:rugram/domain/data_providers/user_data_provider.dart';
 import 'package:rugram/domain/models/user/user.dart';
 
-class UserServiceImpl implements UserService {
-  late final ApiClient client;
+class CacheUserServiceImpl implements UserService {
   late final UserDataProvider userDataProvider;
   late final SessionDataProvider sessionDataProvider;
 
-  UserServiceImpl({
+  CacheUserServiceImpl({
     UserDataProvider? userDataProvider,
-    ApiClient? client,
     SessionDataProvider? sessionDataProvider,
   }) {
-    this.sessionDataProvider = sessionDataProvider ?? SessionDataProviderImpl();
-    final authInterceptor = AuthInterceptor(this.sessionDataProvider);
-    this.client = client ?? ApiClientImpl([authInterceptor]);
     this.userDataProvider = userDataProvider ?? UserDataProviderImpl();
+    this.sessionDataProvider = sessionDataProvider ?? SessionDataProviderImpl();
   }
 
   @override
   Future<User?> getUser(String username) async {
-    final response = await client.getUser(username);
-    final user = User.fromJson(response);
-    await userDataProvider.addUser(user);
-    return user;
+    return userDataProvider.fetchUser(username);
   }
 
   @override
   Future<User?> getUserFromSession() async {
-    final response = await client.getUserFromSession();
-    final user = User.fromJson(response);
-    await userDataProvider.addUser(user);
-    return user;
+    final session = await sessionDataProvider.fetchSession();
+    final id = session?.id;
+    if (id == null) return null;
+    return userDataProvider.fetchUserById(id);
   }
 }
